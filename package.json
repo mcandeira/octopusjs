@@ -1,0 +1,46 @@
+{
+  "name": "octopus-js-native",
+  "version": "1.1.2",
+  "description": "OctopusJS 🐙 | High-performance distributed intelligence frontend development framework.",
+  "type": "module",
+  "main": "./dist/octopus.min.js",
+  "module": "./octopus.js",
+  "exports": {
+    ".": {
+      "import": "./octopus.js",
+      "default": "./dist/octopus.min.js"
+    }
+  },
+  "files": [
+    "dist",
+    "octopus.js"
+  ],
+  "scripts": {
+    "prebuild": "node -e \"const fs=require('fs'); if(!fs.existsSync('dist')) fs.mkdirSync('dist');\"",
+    "build": "terser octopus.js -o dist/octopus.min.js --compress --mangle --source-map \"url='octopus.min.js.map'\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcandeira/octopusjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mcandeira/octopusjs/issues"
+  },
+  "keywords": [
+    "framework",
+    "frontend",
+    "performance",
+    "lcp-optimized",
+    "native",
+    "distributed",
+    "octopus",
+    "lightweight"
+  ],
+  "author": "Miguel Candeira Carrera",
+  "license": "MIT",
+  "collaboration": "Supervised and improved with the invaluable assistance of Gemini (Google AI)",
+  "devDependencies": {
+    "terser": "^5.0.0"
+  }
+}

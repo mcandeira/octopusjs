@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OctopusJS Benchmark</title>
+</head>
+<body>
+    <div>
+        <h1>OctopusJS Benchmark</h1>
+
+        <template>
+            <div>
+                <h1>{{ name }}</h1>
+                8{if active}
+                    <p>Estado: Online</p>
+                8{endif}
+                <ul>
+                    8{for item in items}
+                        <li>Item: {{ item }}</li>
+                    8{endfor}
+                </ul>
+            </div>
+        </template>
+
+        <script type="module" class="octopus">
+            import { octopus } from '../octopus.js'
+
+            const component = octopus.getComponent()
+            const template = component.getChild('template')
+
+            const data = {
+                name: 'Gemini User',
+                active: true,
+                items: Array.from({length:1000}, (_, i) => `Producto ${i}`)
+            }
+
+            const start = performance.now()
+            component.render([template, data])
+            requestAnimationFrame(() => {
+                setTimeout(()=>{
+                    const end = performance.now()
+                    const total = (end -start).toFixed(4)
+                    console.log(`🚀 OctopusJS Render Time: ${total}ms`)
+
+                    octopus.getComponent('body').render(`<div style="padding:10px; background:lawngreen; font-weight:bold">Time: ${total}ms</div>`, 'before')
+                }, 0)
+            })
+        </script>
+
+        <style>
+            @scope{
+                > h1{
+                    background-color: darkorchid;
+                }
+            }
+        </style>
+    </div>
+</body>
+</html>

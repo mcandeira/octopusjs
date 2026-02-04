@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanilla JS Benchmark</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Vanilla JS Benchmark</h1>
+    </div>
+
+    <script>
+        const data = {
+            name: 'Gemini User',
+            active: true,
+            items: Array.from({length: 1000}, (_, i) => `Producto ${i}`)
+        };
+
+        const start = performance.now();
+
+        // Lógica nativa pura (la más rápida: concatenación de strings)
+        let html = `<div>
+            <h1>${data.name}</h1>
+            ${data.active ? '<p>Estado: Online</p>' : ''}
+            <ul>`;
+        
+        for (let i = 0; i < data.items.length; i++) {
+            html += `<li>Item: ${data.items[i]}</li>`;
+        }
+        
+        html += `</ul></div>`;
+
+        // Inserción en el DOM
+        document.getElementById('app').innerHTML += html;
+
+        // Medición del ciclo completo (Render + Paint)
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                const end = performance.now();
+                const total = (end - start).toFixed(4);
+                console.log(`⚡ Vanilla JS Render Time: ${total}ms`);
+
+                const marker = document.createElement('div');
+                marker.style = "padding:10px; background:gold; font-weight:bold; position:fixed; top:0; width:100%;";
+                marker.innerText = `Vanilla Time: ${total}ms`;
+                document.body.prepend(marker);
+            }, 0);
+        });
+    </script>
+</body>
+</html>

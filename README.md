@@ -3,12 +3,20 @@
 Develop smart frontend components with the raw power of native HTML, CSS and JavaScript using this high-performance distributed intelligence framework.
 
 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-    <img src="https://img.shields.io/badge/Performance-54.4ms%20(1k%20items)-seagreen?style=for-the-badge&logo=octostop" alt="Performance">
+    <img src="https://img.shields.io/badge/Performance-~11ms%20(1k%20items)-seagreen?style=for-the-badge&logo=octostop" alt="Performance">
     <img src="https://img.shields.io/badge/Size-3.8kB%20Gzipped-007ec6?style=for-the-badge" alt="Size">
     <img src="https://img.shields.io/badge/Logic-Distributed%20Intelligence-darkorchid?style=for-the-badge" alt="Logic">
     <img src="https://img.shields.io/badge/Dependencies-0-fe7d37?style=for-the-badge" alt="Dependencies">
     <img src="https://img.shields.io/npm/v/octopus-js-native?style=for-the-badge&color=critical" alt="NPM Version">
 </div>
+
+[<h2 id="demo">Demo</h2>](#demo)
+
+Render 1,000 reactive components in **~11ms** using only native web standards.
+
+![OctopusJS Performance Demo](./assets/demo.gif)
+
+>Check out the [Live Demo](https://mcandeira.github.io/octopusjs/).
 
 [<h2 id="table">Table of Contents</h2>](#table)
 
@@ -18,7 +26,7 @@ Develop smart frontend components with the raw power of native HTML, CSS and Jav
 + [OctopusJS Features](#features)
 + [Advanced Use Cases](#advanced)
 + [Release Notes](#release)
-<!-- + [Live Demo](https://www.google.com/search?q=https://octopusjs.com) -->
++ [Live Demo](https://mcandeira.github.io/octopusjs/)
 + [Benchmarks & Comparison](#benchmarks)
 + [Contact & Community](#contact)
 + [License & Acknowledgments](#footer)
@@ -377,7 +385,7 @@ OctopusJS is designed to be "garbage-collector friendly." By using **DocumentFra
 
 By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifting of encapsulation to the browser's C++ core instead of simulating it with expensive JavaScript workarounds.
 
-> **The Result:** A framework that doesn't fight the browser, but flows with it. That's how we achieve **54.4ms (avg)** for rendering 1,000 items while others are still parsing their virtual trees.
+> **The Result:** A framework that doesn't fight the browser, but flows with it. That's how we achieve **~11ms (avg)** for rendering 1,000 items while others are still parsing their virtual trees.
 
 [Table of Contents](#table)
 
@@ -393,7 +401,7 @@ By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifti
 
 [<h2 id="benchmarks">Benchmarks & Comparison</h2>](#benchmarks)
 
-[OctopusJS benchmark](https://github.com/mcandeira/octopusjs/blob/main/benchmarks/benchmark_octopus.html) was tested against [Vanilla JS standard benchmark](https://github.com/mcandeira/octopusjs/blob/main/benchmarks/benchmark_vanilla.html). The following results show the time (in milliseconds) required to render and mount **1,000 complex items** into the DOM.
+[OctopusJS benchmark](https://github.com/mcandeira/octopusjs/blob/main/assets/benchmarks/benchmark_octopus.html) was tested against [Vanilla JS standard benchmark](https://github.com/mcandeira/octopusjs/blob/main/assets/benchmarks/benchmark_vanilla.html). The following results show the time (in milliseconds) required to render and mount **1,000 complex items** into the DOM.
 
 | Framework       | Render Time (1k items) | Size (Gzipped) | DOM Strategy         |
 |-----------------|------------------------|----------------|----------------------|

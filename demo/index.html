@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OctopusJS | Abyssal Octopus Performance Demo</title>
+</head>
+<body>
+
+    <header>
+        <h1>OctopusJS Benchmark 🐙</h1>
+        <button>LIBERAR AL KRAKEN (1,000 Items)</button>
+        <div>Presiona el botón para medir el tiempo...</div>
+
+        <script type="module" class="octopus">
+            import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            {
+                const component = octopus.getComponent(this)
+                const button = component.getChild('button')
+                const result = component.getChild('div')
+                
+                octopus.setVal('trigger', button)
+                octopus.setVal('result', result)
+            }
+        </script>
+
+        <style>
+            @scope{
+                &{
+                    text-align: center;
+                    padding: 2rem;
+                    position: sticky;
+                    top: 0;
+                    background: rgba(15, 23, 42, 0.9);
+                    backdrop-filter: blur(10px);
+                    width: 100%;
+                    border-bottom: 2px solid var(--primary);
+                    z-index: 100;
+                }
+                > button {
+                    background-color: var(--primary);
+                    color: white;
+                    border: none;
+                    padding: 1rem 2rem;
+                    font-size: 1.1rem;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: transform 0.1s;
+                    font-weight: bold;
+                }
+                > button:active {
+                    transform: scale(0.95);
+                }
+                > div {
+                    font-size: 1.2rem;
+                    margin: 1rem 0;
+                    font-weight: bold;
+                    color: #2dd4bf; /* Teal para resaltar el tiempo */
+                }
+            }
+        </style>
+    </header>
+
+    <main>
+        <template>
+            8{for item in items}
+            <div class="octopus-card">
+                <div class="id">#{{ item.id }}</div>
+                <p>{{ item.label }}</p>
+                <small>Status: Active</small>
+            </div>
+            8{endfor}
+        </template>
+
+        <script type="module" class="octopus">
+            import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            {
+                const component = octopus.getComponent(this)
+                const template = component.getChild('template')
+
+                const rawData = Array.from({ length: 1000 }, (_, i) => ({
+                    id: i + 1,
+                    label: `Component ${i + 1}`
+                }))
+
+                const button = octopus.getVal('trigger')
+                const result = octopus.getVal('result')
+
+                button.setListener('click', () => {
+
+                    result.getRef().innerHTML = ''
+                    
+                    const start = performance.now()
+                    component.render([template, { items: rawData }])
+                    
+                    const end = performance.now()
+                    const duration = (end - start).toFixed(2)
+
+                    result.getRef().innerText = `🚀 1,000 componentes renderizados en: ${duration} ms`
+                })
+            }
+        </script>
+
+        <style>
+            @scope{
+                &{
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                    gap: 10px;
+                    padding: 20px;
+                    width: 90%;
+                    max-width: 1200px;
+                }
+                .octopus-card {
+                    background: var(--card-bg);
+                    padding: 15px;
+                    border-radius: 8px;
+                    text-align: center;
+                    border: 1px solid #334155;
+                }
+                .octopus-card .id {
+                    color: var(--primary); font-weight: bold;
+                }
+            }
+        </style>
+    </main>
+
+    <style>
+        :root {
+            --primary: darkorchid;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</body>
+</html>

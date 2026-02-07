@@ -22,7 +22,8 @@ Render 1,000 reactive components in **~11ms** using only native web standards.
 
 + [What It Is](#what-it-is)
 + [Advantages](#advantages)
-+ [How To Use](#how-to-use)
++ [Quick Start](#quick)
++ [How To Use](#use)
 + [OctopusJS Features](#features)
 + [Advanced Use Cases](#advanced)
 + [Release Notes](#release)
@@ -60,7 +61,86 @@ To achieve this, OctopusJS distributes its logic across **Octopus Components**. 
 [Table of Contents](#table)
 
 
-[<h2 id="how-to-use">How To Use</h2>](#how-to-use)
+[<h2 id="quick">🚀 Quick Start (in 60 seconds)</h2>](#quick)
+
+Test this quick example in less than 60 seconds:
+
++ **Prepare your environment:** Open `VS Code` and install the `Live Preview` extension.
+
++ **Create the file:** Create a new `component.html` file.
+
++ **Paste the code:** Copy and paste the following snippet:
+
+    ```html
+    <div>
+        <h1>Quick OctopusJS Example 🐙</h1>
+        <input type="text" placeholder="Add your favorite movies...">
+        <button>Add</button>
+
+        <template>
+            <ul>
+            8{for movie in movies}
+                <li>
+                    <span>{{ movie.name }}</span>
+                </li>
+            8{endfor}
+            </ul>
+        </template>
+
+        <script type="module" class="octopus">
+            import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+
+            const component = octopus.getComponent(this)
+            const template = component.getChild('template')
+            const input = component.getChild('input').getRef()
+            const button = component.getChild('button')
+
+            const movies = []
+
+            button.setListener('click', () => {
+                if(input.value){
+                    movies.push({ name: input.value })
+                    component.deleteAll('li')
+                    component.render([template, {movies}])
+                    input.value = ''
+                }
+            })
+        </script>
+
+        <style>
+            @scope{
+                ul{padding: 0px;}
+                li{
+                    background-color: darkorchid;
+                    color: white;
+                    list-style-type: none;
+                    border-radius: 5px;
+                    padding: 10px;
+                    margin: 5px;
+                }
+            }
+        </style>
+    </div>
+    ```
+
++ **Launch:** Right-click on the code or on the name of the file and select "Show Preview". That's it!
+
+### Now What? 🛠️
+
++ **Experiment:** Change the HTML code to whatever you want.
+
++ **Program:** Change all the JS code to whatever you want. OctopusJS only adds utility functions but you can manipulate the DOM directly.
+
++ **Design:** Change the CSS styles to whatever you want.
+
+### Ready for more?
+
+To seriously use OctopusJS, continue reading.
+
+[Table of Contents](#table)
+
+
+[<h2 id="use">How To Use</h2>](#use)
 
 [<h3 id="install">How To Install</h3>](#install)
 

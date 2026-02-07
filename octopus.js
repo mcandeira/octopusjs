@@ -1,5 +1,5 @@
 /**
- * OctopusJS | v1.1.2 "Abyssal Octopus" 🐙 
+ * OctopusJS | v1.1.4 "Abyssal Octopus" 🐙 
  * ------------------------------------
  * High-performance distributed intelligence frontend development framework.
  * * @author Miguel Candeira Carrera
@@ -110,7 +110,7 @@ export class octopus {
         const body = new OctopusComponent('body')
         body.render(OctopusTemplates.getTemplates())
 
-        body.setListener('submit', (e) => {
+        body.use('addEventListener', 'submit', (e) => {
             e.preventDefault()
             new OctopusRequest(e.target.action, new FormData(e.target)).autoprocess()
         })
@@ -134,13 +134,18 @@ class OctopusComponent {
         if(!this.#ref) throw new TypeError('[Octopus] Unexpected OctopusComponent Argument')
     }
 
-    getRef(){return this.#ref}
+    get ref(){return this.#ref}
 
     getChild(selector){const child = this.#ref.querySelector(selector); return child ? new OctopusComponent(child) : child}
 
-    getValue(){return this.#ref.value ?? this.#ref.innerHTML}
+    set(prop, val){this.#ref[prop] = val; return this}
 
-    setListener(event, callback){this.#ref.addEventListener(event, callback)}
+    get(prop){return this.#ref[prop]}
+
+    use(method, ...args){
+        if(typeof this.#ref[method] === 'function') return this.#ref[method](...args)
+        throw Error(`The ${method} method does not exist.`)
+    }
 
     deleteAll(selector){for(let element of this.#ref.querySelectorAll(selector)) element.remove()}
 
@@ -161,7 +166,7 @@ class OctopusComponent {
         }
     }
 
-    onUnMount(callback){
+    onUnmount(callback){
         new MutationObserver((mutations, obs) => {
             if (!document.body.contains(this.#ref)) {
                 callback()
@@ -244,20 +249,26 @@ class OctopusComponent {
 
         const templateFragment = OctopusComponent.#getTemplate(input).content
 
-        if(relativeElement){
-            const relative = relativeElement instanceof OctopusComponent ? relativeElement.getRef() : relativeElement
-            position === 'before' ? relative.before(templateFragment) : relative.after(templateFragment)
+        const relative = relativeElement?.ref ?? relativeElement
+
+        switch(position){
+            case 'into':
+                if(!relative) throw Error('The "into" option requires a relative element as the third argument')
+                relative.innerHTML = ''
+                relative.append(templateFragment)
+                break
+            case 'before': relative ? relative.before(templateFragment) : this.ref.prepend(templateFragment); break
+            default: relative ? relative.after(templateFragment) : this.ref.append(templateFragment); break
         }
-        else position === 'before' ? this.#ref.prepend(templateFragment) : this.#ref.append(templateFragment)
     }
 
     static #getTemplate(input){
 
-        if(input instanceof OctopusComponent) input = input.getRef()
+        input = input.ref ?? input
     
         if(Array.isArray(input) && input.length === 2){
 
-            let component = input[0] instanceof OctopusComponent ? input[0].getRef() : input[0]
+            let component = input[0].ref ?? input[0]
 
             if(component instanceof Element) component = component.innerHTML
             else if(typeof component === 'string');
@@ -485,18 +496,14 @@ class OctopusTemplates {
                         const component = octopus.getComponent('#{{ dialogID }}')
                         const button = component.getChild('button')
 
-                        button.setListener('click', () => {
-                            component.getRef().close()
-                            component.getRef().remove()
+                        button.use('addEventListener', 'click', () => {
+                            component.use('close')
+                            component.use('remove')
                         })
                     </script>
 
                     <style>
                         @scope{
-                            &{
-                                color: {{ color }};
-                                background-color: {{ backgroundColor }};
-                            }
                             >div{
                                 display: flex;
                                 flex-direction: column;
@@ -517,9 +524,9 @@ class OctopusFunctions {
         const dialog = body.getChild('#octopusDialogTemplate')
         if(!dialog){console.warn('[Octopus] Dialog Error: Template "#octopusDialogTemplate" not found.'); return}
         const existing = body.getChild(`#${id}`)
-        if(existing) existing.getRef().remove()
+        if(existing) existing.use('remove')
         body.render([dialog, {message, classes, options, 'dialogID': id}])
-        body.getChild(`#${id}`)?.getRef().showModal()
+        body.getChild(`#${id}`)?.use('showModal')
     }
 
 }

@@ -10,9 +10,9 @@ Develop smart frontend components with the raw power of native HTML, CSS and Jav
     <img src="https://img.shields.io/npm/v/octopus-js-native?style=for-the-badge&color=critical" alt="NPM Version">
 </div>
 
-[<h2 id="demo">Demo</h2>](#demo)
+<br><hr>
 
-Render 1,000 reactive components in **~11ms** using only native web standards.
+Render 1,000 reactive components in **~11ms** (logic execution) using only native web standards.
 
 ![OctopusJS Performance Demo](./assets/demo.gif)
 
@@ -77,14 +77,14 @@ Test this quick example in less than 60 seconds:
         <input type="text" placeholder="Add your favorite movies...">
         <button>Add</button>
 
+        <ul></ul>
+
         <template>
-            <ul>
             8{for movie in movies}
                 <li>
                     <span>{{ movie.name }}</span>
                 </li>
             8{endfor}
-            </ul>
         </template>
 
         <script type="module" class="octopus">
@@ -92,17 +92,18 @@ Test this quick example in less than 60 seconds:
 
             const component = octopus.getComponent(this)
             const template = component.getChild('template')
-            const input = component.getChild('input').getRef()
+            const input = component.getChild('input')
             const button = component.getChild('button')
+            const list = component.getChild('ul')
 
             const movies = []
 
-            button.setListener('click', () => {
-                if(input.value){
-                    movies.push({ name: input.value })
-                    component.deleteAll('li')
-                    component.render([template, {movies}])
-                    input.value = ''
+            button.use('addEventListener', 'click', () => {
+                const value = input.get('value')
+                if(value){
+                    movies.push({ name: value })
+                    component.render([template, {movies}], 'into', list)
+                    input.set('value', '')
                 }
             })
         </script>
@@ -392,9 +393,11 @@ The OctopusJS library provides a robust API through the `octopus` "constant". It
 ### 1. Component Lifecycle & DOM Management
 Accessed via `octopus.getComponent()`, these methods provide granular control over the component's internal universe:
 
-* **`getRef()`**: Returns the native DOM reference of the component wrapper.
+* **`ref`**: (Getter) Returns the native DOM reference of the component wrapper.
 * **`getChild(selector)`**: A scoped query selector to safely access elements within the component.
-* **`setListener(event, callback)`**: Simplifies event binding with automatic scope management.
+* **`set(prop, val)`**: Set the property of the underlying HTML element.
+* **`get(prop)`**: Get the property value of the underlying HTML element.
+* **`use(method, ...args)`**: Invokes any native method of the underlying HTML element.
 * **`deleteAll(selector)`**: Efficiently removes all matching child elements from the DOM.
 * **`onMount(callback)`**: Executes code as soon as the component is effectively attached to the DOM.
 * **`onUnmount(callback)`**: Triggers when the component is removed from the DOM.

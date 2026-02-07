@@ -91,7 +91,7 @@
 
                 button.use('addEventListener', 'click', () => {
 
-                    result.set(innerHTML, '')
+                    result.set('innerHTML', '')
                     
                     const start = performance.now()
                     component.render([template, { items: rawData }], 'into', container)
@@ -99,7 +99,7 @@
                     const end = performance.now()
                     const duration = (end - start).toFixed(2)
 
-                    result.set(innerText, `🚀 1,000 componentes renderizados en: ${duration} ms`)
+                    result.set('innerText', `🚀 1,000 componentes renderizados en: ${duration} ms`)
                 })
             }
         </script>

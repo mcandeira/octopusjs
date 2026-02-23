@@ -5,11 +5,9 @@
   "type": "module",
   "main": "./dist/octopus.min.js",
   "module": "./dist/octopus.min.js",
-  "types": "./dist/octopus.d.ts",
   "exports": {
     ".": {
       "import": "./dist/octopus.min.js",
-      "types": "./dist/octopus.d.ts",
       "default": "./dist/octopus.min.js"
     }
   },

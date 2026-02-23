@@ -1,5 +1,4 @@
 import esbuild from 'esbuild';
-import { execSync } from 'child_process';
 import fs from 'fs';
 
 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
@@ -41,9 +40,6 @@ try {
     format: 'esm',
     banner: { js: banner }
   });
-
-  // 2. Generamos los tipos
-  execSync('tsc --emitDeclarationOnly --declaration --outDir dist', { stdio: 'inherit' });
   
   console.log('✅ Build completada con éxito. Banner inyectado.');
 } catch (error) {

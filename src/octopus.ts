@@ -1,5 +1,5 @@
-import { OctopusComponent } from './core/OctopusComponent'
-import { OctopusTemplates } from './utils/OctopusTemplates'
+import { OctopusComponent } from './periferics/OctopusComponent'
+import { OctopusTemplates } from './control/OctopusTemplates'
 import { OctopusRequest } from './control/OctopusRequest'
 
 export class octopus {

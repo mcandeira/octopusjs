@@ -1,4 +1,26 @@
-export class OctopusTemplates {
+export class OctopusEngine {
+
+     static getTemplate(input:any){
+
+        input = input.ref ?? input
+    
+        if(Array.isArray(input) && input.length === 2){
+
+            let component = input[0].ref ?? input[0]
+
+            if(component instanceof Element) component = component.innerHTML
+            else if(typeof component === 'string'){}
+            else throw new TypeError('[Octopus] Render Error: Invalid Template Argument')
+
+            return this.stringToTemplate(this.processTemplate(component, input[1]))
+        }
+
+        if(input instanceof Element) return this.stringToTemplate(input.innerHTML)
+    
+        if(typeof input === 'string') return this.stringToTemplate(input)
+    
+        throw new TypeError('[Octopus] Render Error: Invalid Template Argument')
+    }
 
     static #REGEX_SPACES = /\s+/
     static #REGEX_VARS = /\{\{([^}]+)\}\}/g
@@ -11,7 +33,7 @@ export class OctopusTemplates {
             
             if(condition) {
                 const innerTemplate = string.substring(tag.ending, tag.closeTag.starting)
-                return OctopusTemplates.processTemplate(innerTemplate, data)
+                return this.processTemplate(innerTemplate, data)
             }
             return ''
         },
@@ -28,7 +50,7 @@ export class OctopusTemplates {
                 for(let element of list){
                     let forData = Object.create(data)
                     forData[varName] = element
-                    chunks.push(OctopusTemplates.processTemplate(innerTemplate, forData))
+                    chunks.push(OctopusEngine.processTemplate(innerTemplate, forData))
                 }
                 return chunks.join('')
             }
@@ -43,7 +65,7 @@ export class OctopusTemplates {
 
         try {
             while(true){
-                const tag:any = OctopusTemplates.getPairedTags('8{', '}', string, cursor)
+                const tag:any = this.getPairedTags('8{', '}', string, cursor)
                 
                 if(!tag){if(cursor < string.length) chunks.push(string.substring(cursor)); break}
 
@@ -57,7 +79,7 @@ export class OctopusTemplates {
                 }
 
                 const type = tag.contents[0]
-                if(OctopusTemplates.directives[type]) chunks.push(OctopusTemplates.directives[type](tag, data, string))
+                if(this.directives[type]) chunks.push(this.directives[type](tag, data, string))
                 else chunks.push(string.substring(tag.starting, tag.closeTag.ending))
 
                 cursor = tag.closeTag.ending
@@ -66,7 +88,7 @@ export class OctopusTemplates {
 
         const result = chunks.join('')
 
-        return result.replace(OctopusTemplates.#REGEX_VARS, (match, key) => {
+        return result.replace(this.#REGEX_VARS, (match, key) => {
             const value = key.trim().split('.').reduce((o:any, i:any) => o?.[i], data);
             
             return value ?? '';
@@ -75,7 +97,7 @@ export class OctopusTemplates {
 
     static getPairedTags(startDelimiter:any, endDelimiter:any, string:any, fromIndex= 0){
 
-        let tag:any = OctopusTemplates.getTag(startDelimiter, endDelimiter, string, fromIndex)
+        let tag:any = this.getTag(startDelimiter, endDelimiter, string, fromIndex)
         if(!tag) return tag
 
         let typeTag = tag.contents[0]
@@ -84,7 +106,7 @@ export class OctopusTemplates {
         let nested = 0
         let searchFrom = tag.ending
         while(true){
-            let nextTag = OctopusTemplates.getTag(startDelimiter, endDelimiter, string, searchFrom)
+            let nextTag = this.getTag(startDelimiter, endDelimiter, string, searchFrom)
             if(!nextTag) throw Error(`[Octopus] Template Syntax Error: Unclosed '${typeTag}' tag starting at index ${tag.starting}.`)
 
             searchFrom = nextTag.ending
@@ -118,7 +140,7 @@ export class OctopusTemplates {
         const ending = string.indexOf(endDelimiter, starting)
         if(ending < 0) return null
 
-        const contents = string.substring(starting + startDelimiter.length, ending).trim().split(OctopusTemplates.#REGEX_SPACES)
+        const contents = string.substring(starting + startDelimiter.length, ending).trim().split(this.#REGEX_SPACES)
         if(contents.length < 1 || contents[0] === "") return null
 
         return {'contents': contents, 'starting': starting, 'ending': ending + endDelimiter.length}
@@ -127,14 +149,14 @@ export class OctopusTemplates {
     static stringToTemplate(string:any){
         let template = document.createElement('template')
         template.innerHTML = string
-        OctopusTemplates.fixScripts(template)
+        this.fixScripts(template)
         return template
     }
 
     static fixScripts(template:any){
         const content = template.content
 
-        for(const innerTemplate of content.querySelectorAll('template')) OctopusTemplates.fixScripts(innerTemplate)
+        for(const innerTemplate of content.querySelectorAll('template')) this.fixScripts(innerTemplate)
 
         for(const script of content.querySelectorAll('script')){
             const workingScript = document.createElement('script')
@@ -145,48 +167,4 @@ export class OctopusTemplates {
         }
     }
 
-    static getTemplates(){
-        return `
-            <div id="octopusTemplates">
-                ${this.#templateOctopusDialog()}
-            </div>
-        `
-    }
-
-    static #templateOctopusDialog(){
-        return `
-            <template id="octopusDialogTemplate">
-                <dialog id="{{ dialogID }}" class="{{ classes }}">
-                    <div>
-                        {{ message }}
-                        8{for option in options}
-                            {{ option }}
-                        8{endfor}
-                        <button>Close</button>
-                    </div>
-
-                    <script type="module">
-                        import { octopus } from 'octopus-js-native'
-
-                        const component = octopus.getComponent('#{{ dialogID }}')
-                        const button = component.getChild('button')
-
-                        button.use('addEventListener', 'click', () => {
-                            component.use('close')
-                            component.use('remove')
-                        })
-                    </script>
-
-                    <style>
-                        @scope{
-                            >div{
-                                display: flex;
-                                flex-direction: column;
-                            }
-                        }
-                    </style>
-                </dialog>
-            </template>
-        `
-    }
 }

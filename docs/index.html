@@ -13,7 +13,8 @@
         <div>Presiona el botón para medir el tiempo...</div>
 
         <script type="module" class="octopus">
-            import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            //import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            import { octopus } from '../dist/octopus.min.js'
             {
                 const component = octopus.getComponent(this)
                 const button = component.getChild('button')
@@ -73,7 +74,8 @@
         </template>
 
         <script type="module" class="octopus">
-            import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            //import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            import { octopus } from '../dist/octopus.min.js'
             {
                 const component = octopus.getComponent(this)
                 const template = component.getChild('template')

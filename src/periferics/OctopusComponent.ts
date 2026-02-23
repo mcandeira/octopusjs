@@ -1,5 +1,5 @@
 import { octopus } from '../octopus'
-import { OctopusTemplates } from '../utils/OctopusTemplates'
+import { OctopusEngine } from '../engine/OctopusEngine'
 
 const octopusScripts = Array.from(document.querySelectorAll('script.octopus')).reverse()
 
@@ -132,7 +132,7 @@ export class OctopusComponent {
      */
     render(input:any, position = 'after', relativeElement?:any){
 
-        const templateFragment = OctopusComponent.#getTemplate(input).content
+        const templateFragment = OctopusEngine.getTemplate(input).content
 
         const relative = relativeElement?.ref ?? relativeElement
 
@@ -145,28 +145,6 @@ export class OctopusComponent {
             case 'before': relative ? relative.before(templateFragment) : this.ref.prepend(templateFragment); break
             default: relative ? relative.after(templateFragment) : this.ref.append(templateFragment); break
         }
-    }
-
-    static #getTemplate(input:any){
-
-        input = input.ref ?? input
-    
-        if(Array.isArray(input) && input.length === 2){
-
-            let component = input[0].ref ?? input[0]
-
-            if(component instanceof Element) component = component.innerHTML
-            else if(typeof component === 'string'){}
-            else throw new TypeError('[Octopus] Render Error: Invalid Template Argument')
-
-            return OctopusTemplates.stringToTemplate(OctopusTemplates.processTemplate(component, input[1]))
-        }
-
-        if(input instanceof Element) return OctopusTemplates.stringToTemplate(input.innerHTML)
-    
-        if(typeof input === 'string') return OctopusTemplates.stringToTemplate(input)
-    
-        throw new TypeError('[Octopus] Render Error: Invalid Template Argument')
     }
 
 }

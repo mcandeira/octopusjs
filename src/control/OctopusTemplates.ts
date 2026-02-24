@@ -1,30 +1,19 @@
-import { OctopusComponent } from '../periferics/OctopusComponent'
-
 export class OctopusTemplates {
 
-    static generateDialog(id: any, message: any, classes: any, options = null){
-        id = `${id}Dialog`
-        const body = new OctopusComponent('body')
-        const dialog = body.getChild('#octopusDialogTemplate')
-        if(!dialog){console.warn('[Octopus] Dialog Error: Template "#octopusDialogTemplate" not found.'); return}
-        const existing = body.getChild(`#${id}`)
-        if(existing) existing.use('remove')
-        body.render([dialog, {message, classes, options, 'dialogID': id}])
-        body.getChild(`#${id}`)?.use('showModal')
-    }
-
-    static getTemplates(){
+    static getTemplates(): string
+    {
         return `
             <div id="octopusTemplates">
-                ${this.#templateOctopusDialog()}
+                ${this.octopusDialogTemplate()}
             </div>
         `
     }
 
-    static #templateOctopusDialog(){
+    private static octopusDialogTemplate(): string
+    {
         return `
             <template id="octopusDialogTemplate">
-                <dialog id="{{ dialogID }}" class="{{ classes }}">
+                <dialog id="{{ id }}" class="{{ classes }}">
                     <div>
                         {{ message }}
                         8{for option in options}
@@ -36,7 +25,7 @@ export class OctopusTemplates {
                     <script type="module">
                         import { octopus } from 'octopus-js-native'
 
-                        const component = octopus.getComponent('#{{ dialogID }}')
+                        const component = octopus.getComponent('#{{ id }}')
                         const button = component.getChild('button')
 
                         button.use('addEventListener', 'click', () => {

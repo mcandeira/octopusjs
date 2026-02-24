@@ -19,9 +19,8 @@
                 const component = octopus.getComponent(this)
                 const button = component.getChild('button')
                 const result = component.getChild('div')
-                
-                octopus.setVal('trigger', button)
-                octopus.setVal('result', result)
+
+                octopus.registerValue('button&result', [button, result])
             }
         </script>
 
@@ -86,20 +85,21 @@
                     label: `Component ${i + 1}`
                 }))
 
-                const button = octopus.getVal('trigger')
-                const result = octopus.getVal('result')
+                octopus.deliverValue('button&result', ([button, result]) => {
 
-                button.use('addEventListener', 'click', () => {
+                    button.use('addEventListener', 'click', () => {
 
-                    result.set('innerHTML', '')
-                    
-                    const start = performance.now()
-                    component.render([template, { items: rawData }])
-                    
-                    const end = performance.now()
-                    const duration = (end - start).toFixed(2)
+                        result.set('innerHTML', '')
+                        
+                        const start = performance.now()
+                        component.render([template, { items: rawData }])
+                        
+                        const end = performance.now()
+                        const duration = (end - start).toFixed(2)
 
-                    result.set('innerText', `🚀 1,000 componentes renderizados en: ${duration} ms`)
+                        result.set('innerText', `🚀 1,000 componentes renderizados en: ${duration} ms`)
+                    })
+
                 })
             }
         </script>

@@ -1,6 +1,6 @@
 export class OctopusEngine {
 
-     static getTemplate(input:any){
+     static process(input:any){
 
         input = input.ref ?? input
     
@@ -12,12 +12,12 @@ export class OctopusEngine {
             else if(typeof component === 'string'){}
             else throw new TypeError('[Octopus] Render Error: Invalid Template Argument')
 
-            return this.stringToTemplate(this.processTemplate(component, input[1]))
+            return this.stringToTemplate(this.processTemplate(component, input[1])).content
         }
 
-        if(input instanceof Element) return this.stringToTemplate(input.innerHTML)
+        if(input instanceof Element) return this.stringToTemplate(input.innerHTML).content
     
-        if(typeof input === 'string') return this.stringToTemplate(input)
+        if(typeof input === 'string') return this.stringToTemplate(input).content
     
         throw new TypeError('[Octopus] Render Error: Invalid Template Argument')
     }

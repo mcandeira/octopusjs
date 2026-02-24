@@ -1,121 +1,289 @@
-import { octopus } from '../octopus'
+import { Selector, OctopusUtils, Input } from './OctopusUtils'
+import { OctopusNervousSystem } from './OctopusNervousSystem'
 import { OctopusEngine } from '../engine/OctopusEngine'
+
+type Position = 'beforebegin'|'afterbegin'|'beforeend'|'afterend'|'into'|'default'
 
 const octopusScripts = Array.from(document.querySelectorAll('script.octopus')).reverse()
 
 export class OctopusComponent {
 
-    #ref:any
+    private _ref: Element
+
+    constructor(selector?: Selector)
+    {
+        const reference = selector === undefined ? octopusScripts.pop()?.parentElement :
+                          typeof selector === 'string' ? document.querySelector(selector) : selector
+                
+        OctopusUtils.function.validate(this.constructor, [reference, Element])
+        
+        this._ref = reference as Element
+    }
 
     /**
-     * Create an instance of OctopusComponent.
-     * @param {string|Element|null} [selector] - CSS Selector, DOM Element or null (for self-discovery in octopus scripts).
-     * @throws {TypeError}
+     * Gets the subyacent native DOM Element.
+     * @returns {Element} The native DOM Element.
      */
-    constructor(selector:any){
-        if(selector instanceof Element) this.#ref = selector
-        else if(typeof selector === 'string') this.#ref = document.querySelector(selector)
-        else if(selector === undefined) this.#ref = octopusScripts.pop()?.parentNode
-        if(!this.#ref) throw new TypeError('[Octopus] Unexpected OctopusComponent Argument')
+    get ref(): Element
+    {
+        return this._ref
     }
 
-    get ref(){return this.#ref}
+    /**
+     * Finds the first descendant element that matches the selector and return it as an OctopusComponent.
+     * @param {string} selector - CSS selector to search for.
+     * @returns {OctopusComponent|undefined} The wrapped child component, or undefined if not found.
+     */
+    getChild(selector: string): OctopusComponent|undefined
+    {
+        OctopusUtils.function.validate(this.getChild, [selector, String])
 
-    getChild(selector:any){const child = this.#ref.querySelector(selector); return child ? new OctopusComponent(child) : child}
-
-    set(prop:any, val:any){this.#ref[prop] = val; return this}
-
-    get(prop:any){return this.#ref[prop]}
-
-    use(method:any, ...args:any){
-        if(typeof this.#ref[method] === 'function') return this.#ref[method](...args)
-        throw Error(`The ${method} method does not exist.`)
+        const child = this._ref.querySelector(selector)
+        return child ? new OctopusComponent(child) : undefined
     }
 
-    deleteAll(selector:any){for(let element of this.#ref.querySelectorAll(selector)) element.remove()}
+    /**
+     * Sets a property or attribute on the subyacent Element.
+     * @param {string} prop - The property or attribute name.
+     * @param {any} value - The value to set.
+     * @returns {this} The current OctopusComponent instance for chaining.
+     */
+    set(prop: string, value: any): this
+    {
+        OctopusUtils.function.validate(this.set, [prop, String])
+
+        if(prop in this._ref) (this._ref as any)[prop] = value
+        else this._ref.setAttribute(prop, value)
+        return this
+    }
+
+    /**
+     * Gets a property or attribute from the subyacent Element.
+     * @param {string} prop - The property or attribute name.
+     * @returns {any} The value of the property or attribute.
+     */
+    get(prop: string): any
+    {
+        OctopusUtils.function.validate(this.get, [prop, String])
+
+        return prop in this._ref ? (this._ref as any)[prop] : this._ref.getAttribute(prop)
+    }
+
+    /**
+     * Safely executes a native method on the subyacent Element.
+     * @param {string} method - The native method name to execute.
+     * @param {...any} args - Arguments to pass to the native method.
+     * @returns {any} The result of the native method execution.
+     * @throws {Error} If the method does not exist on the native Element.
+     */
+    use(method: string, ...args: any[]): any
+    {
+        OctopusUtils.function.validate(this.use, [method, String])
+
+        const ref = this._ref as any
+        if(typeof ref[method] === 'function') return ref[method](...args)
+        throw new Error(`${OctopusUtils.constant.methodNotExist}${method}`)
+    }
+
+    /**
+     * Removes all descendant elements that match the provided CSS selector.
+     * @param {string} selector - CSS selector of the elements to remove.
+     * @returns {void}
+     */
+    deleteAll(selector: string): void
+    {
+        OctopusUtils.function.validate(this.deleteAll, [selector, String])
+
+        const elements = this._ref.querySelectorAll(selector)
+        for(let element of elements) element.remove()
+    }
 
 /* =====================================================================
     COMPONENT LIFE CYCLE
    ===================================================================== */
     
-    onMount(callback:any){
-        if(document.body.contains(this.#ref)) callback()
+    /**
+     * Executes a callback when the component is mounted (attached to the DOM).
+     * @param {Function} callback - The function to execute on mount.
+     * @returns {void}
+     */
+    onMount(callback: Function): void
+    {
+        OctopusUtils.function.validate(this.onMount, [callback, Function])
+
+        if(document.body.contains(this._ref)) callback()
         else{
-            new MutationObserver((mutations, obs) => {
-                if (document.body.contains(this.#ref)) {
-                    callback()
-                    obs.disconnect()
-                }
+            new MutationObserver(([], obs) => {
+                if(document.body.contains(this._ref)){callback(); obs.disconnect()}
             })
             .observe(document.body, { childList: true, subtree: true })
         }
     }
 
-    onUnmount(callback:any){
-        new MutationObserver((mutations, obs) => {
-            if (!document.body.contains(this.#ref)) {
-                callback()
-                obs.disconnect()
-            }
+    /**
+     * Executes a callback when the component is unmounted (detached from the DOM).
+     * @param {Function} callback - The function to execute on unmount.
+     * @returns {void}
+     */
+    onUnmount(callback: Function): void
+    {
+        OctopusUtils.function.validate(this.onUnmount, [callback, Function])
+        
+        new MutationObserver(([], obs) => {
+            if(!document.body.contains(this._ref)){callback(); obs.disconnect()}
         })
         .observe(document.body, { childList: true, subtree: true })
     }
 
 /* =====================================================================
-    COMPONENT VALS, HELPERS, ACTIONS, SECRETS
+    COMPONENT VALUES, HELPERS, ACTIONS
    ===================================================================== */
-    
-    setVal(name:any, val:any, unlock = false){octopus.setVal(name, val, unlock)}
 
-    getVal(name:any){return octopus.getVal(name)}
+    /**
+     * Registers a global value in the Central Nervous System.
+     * @param {string} name - The unique name for the value.
+     * @param {any} value - The data payload to register.
+     * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
+     * @returns {void}
+     */
+    sendValue(name: string, value: any, override: boolean = false): void
+    {
+        OctopusNervousSystem.registerValue(name, value, override)
+    }
 
-    setHelper(name:any, callback:any, unlock = false){octopus.setHelper(name, callback, unlock)}
+    /**
+     * Subscribes to a global value from the Central Nervous System.
+     * @param {string} name - The name of the registered value.
+     * @param {Function} callback - The function to execute when the value is available.
+     * @param {boolean} [remember=true] - If true, the callback will execute whenever the value changes.
+     * @returns {void}
+     */
+    receiveValue(name: string, callback: Function, remember: boolean = true): void
+    {
+        OctopusNervousSystem.deliverValue(name, callback, remember)
+    }
 
-    getHelper(name:any){return octopus.getHelper(name)}
+    /**
+     * Registers a globally protected value requiring a password.
+     * @param {string} name - The unique name for the protected value.
+     * @param {any} value - The sensitive data payload to register.
+     * @param {string} password - The password required to retrieve the value.
+     * @returns {void}
+     */
+    sendProtected(name: string, value: any, password: string): void
+    {
+        OctopusNervousSystem.registerProtected(name, value, password)
+    }
 
-    setAction(name:any, callback:any, unlock = false){octopus.setAction(name, callback, unlock)}
+    /**
+     * Subscribes to a globally protected value using a password.
+     * @param {string} name - The name of the protected value.
+     * @param {string} password - The password required to unlock the value.
+     * @param {Function} callback - The function to execute when the value is available.
+     * @param {boolean} [remember=true] - If true, the callback will execute whenever the value changes.
+     * @returns {void}
+     */
+    receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
+    {
+        OctopusNervousSystem.deliverProtected(name, password, callback, remember)
+    }
 
-    triggerAction(name:any, value = null){octopus.triggerAction(name, value)}
+    /**
+     * Registers a global helper function.
+     * @param {string} name - The unique name for the helper.
+     * @param {Function} callback - The helper function to register.
+     * @param {boolean} [override=false] - If true, overwrites an existing helper.
+     * @returns {void}
+     */
+    sendHelper(name: string, callback: Function, override: boolean = false): void
+    {
+        OctopusNervousSystem.registerHelper(name, callback, override)
+    }
 
-    setSecret(name:any, val:any, password:any, fun = false){octopus.setSecret(name, val, password, fun)}
+    /**
+     * Retrieves or subscribes to a global helper function.
+     * @param {string} name - The name of the registered helper.
+     * @param {Function} callback - The function that will receive the helper.
+     * @returns {void}
+     */
+    receiveHelper(name: string, callback: Function): void
+    {
+        OctopusNervousSystem.deliverHelper(name, callback)
+    }
 
-    getSecret(name:any, password:any){return octopus.getSecret(name, password)}
+    /**
+     * Registers a global action in the Central Nervous System.
+     * @param {string} name - The unique name for the action.
+     * @param {Function} action - The action function to register.
+     * @param {boolean} [override=false] - If true, overwrites an existing action.
+     * @returns {void}
+     */
+    setAction(name: string, action: Function, override: boolean = false): void
+    {
+        OctopusNervousSystem.registerAction(name, action, override)
+    }
+
+    /**
+     * Triggers a globally registered action.
+     * @param {string} name - The name of the action to trigger.
+     * @param {any} [value=undefined] - The optional payload to pass to the action.
+     * @returns {void}
+     */
+    triggerAction(name: string, value: any = undefined): void
+    {
+        OctopusNervousSystem.triggerAction(name, value)
+    }
 
 /* =====================================================================
     COMPONENT PROPS
    ===================================================================== */
-    static #props = new WeakMap()
 
-    setProp(name:any, val:any, unlock = false){
-        let props = OctopusComponent.#props
-        if(!unlock && props.get(this.#ref)?.has(name)){console.warn(`[Octopus] The prop "${name}" already exists.`, this.#ref); return}
-        if(!props.get(this.#ref)) props.set(this.#ref, new Map())
-        props.get(this.#ref).set(name, val)
+    /**
+     * Emits a prop value to descendants scoped to this component.
+     * @param {string} name - The name of the prop.
+     * @param {any} value - The payload of the prop.
+     * @param {boolean} [override=false] - If true, overwrites an existing prop with the same name.
+     * @returns {void}
+     */
+    sendProp(name: string, value:any, override: boolean = false): void
+    {
+        OctopusNervousSystem.registerProp(this._ref, name, value, override)
     }
 
-    getProp(name:any){
-        const parent = this.#ref.closest('*:has(> script.octopus):not(:scope)')
-        if(!parent){console.warn(`[Octopus] Parent not found for prop "${name}"`, this.#ref); return}
-        let prop = OctopusComponent.#props.get(parent)?.get(name)
-        if(prop === undefined){console.warn(`[Octopus] The prop "${name}" doesn't exist.`, this.#ref); return}
-        return prop
+    /**
+     * Subscribes to a prop value scoped to this component.
+     * @param {string} name - The name of the prop.
+     * @param {Function} callback - The function to execute when the prop is available.
+     * @param {boolean} [remember=true] - If true, the callback will execute whenever the prop changes.
+     * @returns {void}
+     */
+    receiveProp(name: string, callback: Function, remember: boolean = true): void
+    {
+        OctopusNervousSystem.deliverProp(this._ref, name, callback, remember)
     }
 
-    listenChild(name:any, listener:any, unlock = false){
-        let props = OctopusComponent.#props
-        let propName = `childListener-${name}`
-        if(!unlock && props.get(this.#ref)?.has(propName)){console.warn(`[Octopus] The child listener "${propName}" already exists.`, this.#ref); return}
-        if(!props.get(this.#ref)) props.set(this.#ref, new Map())
-        props.get(this.#ref).set(propName, listener)
+    /**
+     * Subscribes to child events or data scoped to this component.
+     * @param {string} name - The name of the child event/data.
+     * @param {Function} callback - The function to execute when received.
+     * @param {boolean} [override=false] - If true, overwrites an existing child receiver.
+     * @returns {void}
+     */
+    receiveChild(name: string, callback: Function, override: boolean = false): void
+    {
+        OctopusNervousSystem.receiveChild(this._ref, name, callback, override)
     }
 
-    sendParent(name:any, value:any){
-        let propName = `childListener-${name}`
-        const parent = this.#ref.closest('*:has(> script.octopus):not(:scope)')
-        if(!parent){console.warn(`[Octopus] Parent not found for listener "${name}"`, this.#ref); return}
-        let listener = OctopusComponent.#props.get(parent)?.get(propName)
-        if(!listener){console.warn(`[Octopus] The child listener "${propName}" doesn't exist.`, this.#ref); return}
-        listener(value)
+    /**
+     * Emits an event or data upwards to parent component.
+     * @param {string} name - The name of the parent event/data.
+     * @param {any} value - The payload to send upwards.
+     * @param {boolean} [remember=true] - If true, the parent will retain this data.
+     * @returns {void}
+     */
+    sendParent(name: string, value: any): void
+    {
+        OctopusNervousSystem.sendParent(this._ref, name, value)    
     }
 
 /* =====================================================================
@@ -124,27 +292,30 @@ export class OctopusComponent {
 
     /**
      * Renders content in the DOM in an ultra-efficient way.
-     * @param {string|Element|OctopusComponent|Array} input - Template or Array [template, data] to process.
-     * @param {'before'|'after'} [position='after'] - Relative position where to insert the result. Its behavior changes depending on whether we specify a relative element or not.
+     * @param {Input} input - Template (OctopusComponent, Element or string) or Array [Template, data] to process.
+     * @param {Position} [position='default'] - Relative position where to insert the result.
      * @param {OctopusComponent|Element} [relativeElement] - Relative element to insert the result.
      * @returns {void}
      * @throws {TypeError}
      */
-    render(input:any, position = 'after', relativeElement?:any){
+    render(input: Input, position: Position = 'default', relativeElement: OctopusComponent|Element = this._ref): void
+    {
+        const processedInput = OctopusEngine.process(input)
 
-        const templateFragment = OctopusEngine.getTemplate(input).content
-
-        const relative = relativeElement?.ref ?? relativeElement
+        const relative = relativeElement instanceof OctopusComponent ? relativeElement._ref : relativeElement
 
         switch(position){
+            case 'beforebegin': relative.before(processedInput); break
+            case 'afterbegin': relative.prepend(processedInput); break
+            case 'beforeend': relative.append(processedInput); break
+            case 'afterend': relative.after(processedInput); break
             case 'into':
-                if(!relative) throw Error('The "into" option requires a relative element as the third argument')
-                relative.innerHTML = ''
-                relative.append(templateFragment)
+                if(relative === this._ref) throw new Error(OctopusUtils.constant.notHimself)
+                relative.replaceChildren(processedInput)
                 break
-            case 'before': relative ? relative.before(templateFragment) : this.ref.prepend(templateFragment); break
-            default: relative ? relative.after(templateFragment) : this.ref.append(templateFragment); break
+            default:
+                if(relative === this._ref) relative.append(processedInput)
+                else relative.after(processedInput)
         }
     }
-
 }

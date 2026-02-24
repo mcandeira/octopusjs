@@ -1,76 +1,143 @@
 import { OctopusComponent } from './periferics/OctopusComponent'
+import { OctopusNervousSystem } from './periferics/OctopusNervousSystem'
 import { OctopusMind } from './control/OctopusMind'
 
+import type { Selector } from './periferics/OctopusUtils'
+
 export class octopus {
+
+    private constructor(){}
 
     /**
      * Factory method to instantiate an OctopusComponent object.
      * @static
-     * @param {string|Element|null} [selector] - CSS Selector, DOM Element or null (for self-discovery in octopus scripts).
+     * @param {Selector} [selector] - CSS Selector, DOM Element or undefined (for self-discovery of the OctopusComponent).
      * @returns {OctopusComponent} A new OctopusComponent instance.
      */
-    static getComponent(selector: any){return new OctopusComponent(selector)}
-
-/* =====================================================================
-    OCTOPUS VALS
-   ===================================================================== */
-    static #vals = new Map()
-
-    static setVal(name: any, val: any, unlock = false){
-        if(!unlock && octopus.#vals.has(name)){console.warn(`[Octopus] The val "${name}" already exists.`); return}
-        octopus.#vals.set(name, val)
+    static getComponent(selector?: Selector): OctopusComponent
+    {
+        return new OctopusComponent(selector)
     }
 
-    static getVal(name: any){
-        return octopus.#vals.get(name)
+/* =====================================================================
+    OCTOPUS VALUES
+   ===================================================================== */
+
+    /**
+     * Registers a value in the Octopus Central Nervous System.
+     * @static
+     * @param {string} name - The unique name for the value.
+     * @param {any} value - The data payload to register.
+     * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
+     * @returns {void}
+     */ 
+    static registerValue(name: string, value: any, override: boolean = false): void
+    {
+        OctopusNervousSystem.registerValue(name, value, override)
+    }
+
+    /**
+     * Subscribes a callback to a registered value in the Octopus Central Nervous System.
+     * @static
+     * @param {string} name - The name of the registered value.
+     * @param {Function} callback - The function to execute when the value is available.
+     * @param {boolean} [remember=true] - If true, the value will be deliver whenever it changes.
+     * @returns {void}
+     */
+    static deliverValue(name: string, callback: Function, remember: boolean = true): void
+    {
+        OctopusNervousSystem.deliverValue(name, callback, remember)
+    }
+
+/* =====================================================================
+    OCTOPUS PROTECTED
+   ===================================================================== */
+
+    /**
+     * Registers a protected value that requires a password for access.
+     * @static
+     * @param {string} name - The unique name for the protected value.
+     * @param {any} value - The sensitive data payload to register.
+     * @param {string} password - The password required to retrieve the value.
+     * @returns {void}
+     */
+    static registerProtected(name: string, value: any, password: string): void
+    {
+        OctopusNervousSystem.registerProtected(name, value, password)
+    }
+
+    /**
+     * Subscribes a callback to a protected value, providing the required password.
+     * @static
+     * @param {string} name - The name of the protected value.
+     * @param {string} password - The password required to unlock the value.
+     * @param {Function} callback - The function to execute when the protected value is available.
+     * @param {boolean} [remember=true] - If true, the value will be deliver whenever it changes.
+     * @returns {void}
+     */
+    static deliverProtected(name: string, password: string, callback: Function, remember: boolean = true): void
+    {
+        OctopusNervousSystem.deliverProtected(name, password, callback, remember)
     }
 
 /* =====================================================================
     OCTOPUS HELPERS
    ===================================================================== */
-    static #helpers = new Map()
 
-    static setHelper(name: any, callback: any, unlock = false){
-        if(typeof callback !== 'function'){console.warn(`[Octopus] The callback argument is not a function, in helper "${name}".`); return}
-        if(!unlock && octopus.#helpers.has(name)){console.warn(`[Octopus] The helper "${name}" already exists.`); return}
-        octopus.#helpers.set(name, callback)
+    /**
+     * Registers a global helper function.
+     * @static
+     * @param {string} name - The unique name for the helper.
+     * @param {Function} callback - The helper function to register.
+     * @param {boolean} [override=false] - If true, overwrites an existing helper with the same name.
+     * @returns {void}
+     */
+    static registerHelper(name: string, callback: Function, override: boolean = false): void
+    {
+        OctopusNervousSystem.registerHelper(name, callback, override)
     }
 
-    static getHelper(name: any){
-        if(!octopus.#helpers.has(name)){console.warn(`[Octopus] The helper "${name}" doesn't exist.`); return}
-        return octopus.#helpers.get(name)
+    /**
+     * Retrieves or subscribes to a registered helper function.
+     * @static
+     * @param {string} name - The name of the registered helper.
+     * @param {Function} callback - The function that will receive the helper.
+     * @param {boolean} [remember=false] - If true, the helper will be deliver whenever it changes.
+     * @returns {void}
+     */
+    static deliverHelper(name: string, callback: Function, remember: boolean = false): void
+    {
+        OctopusNervousSystem.deliverHelper(name, callback, remember)
     }
 
 /* =====================================================================
     OCTOPUS ACTIONS
    ===================================================================== */
-    static #actions = new Map()
 
-    static setAction(name: any, callback: any, unlock = false){
-        if(typeof callback !== 'function'){console.warn(`[Octopus] The callback argument is not a function, in action "${name}".`); return}
-        if(!unlock && octopus.#actions.has(name)){console.warn(`[Octopus] The action "${name}" already exists.`); return}
-        octopus.#actions.set(name, callback)
+    /**
+     * Registers a global action in the Octopus Central Nervous System.
+     * @static
+     * @param {string} name - The unique name for the action.
+     * @param {Function} action - The action function to register.
+     * @param {boolean} [override=false] - If true, overwrites an existing action with the same name.
+     * @returns {void}
+     */
+    static registerAction(name: string, action: Function, override: boolean = false): void
+    {
+        OctopusNervousSystem.registerAction(name, action, override)
     }
 
-    static triggerAction(name: any, value = null){
-        if(!octopus.#actions.has(name)){console.warn(`[Octopus] The action "${name}" doesn't exist.`); return}
-        octopus.#actions.get(name)(value)
-    }
-
-/* =====================================================================
-    OCTOPUS SECRETS
-   ===================================================================== */
-    static #secrets = new Map()
-
-    static setSecret(name: any, val: any, password: any, fun = false){
-        if(!octopus.#secrets.has(name)){octopus.#secrets.set(name, new Map())}else if(!octopus.#secrets.get(name)?.has(password) && !fun){return}
-        octopus.#secrets.get(name).set(password, val)
-    }
-
-    static getSecret(name: any, password: any){
-        const secret = octopus.#secrets.get(name)?.get(password)
-        if(!secret){console.warn(`[Octopus] The secret "${name}" can't be accessed.`); return}
-        return secret
+    /**
+     * Triggers a registered action, optionally passing a payload.
+     * @static
+     * @param {string} name - The name of the action to trigger.
+     * @param {any} [value=undefined] - The optional payload to pass to the action.
+     * @param {boolean} [remember=false] - If true, the action will trigger whenever it changes.
+     * @returns {void}
+     */
+    static triggerAction(name: string, value: any = undefined, remember: boolean = false): void
+    {
+        OctopusNervousSystem.triggerAction(name, value, remember)
     }
 
 /* =====================================================================
@@ -82,7 +149,8 @@ export class octopus {
      * @static
      * @returns {void}
      */
-    static fullActive(){
+    static fullActive(): void
+    {
         OctopusMind.takeControl()
     }
 

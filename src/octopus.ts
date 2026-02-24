@@ -1,6 +1,5 @@
 import { OctopusComponent } from './periferics/OctopusComponent'
-import { OctopusTemplates } from './control/OctopusTemplates'
-import { OctopusRequest } from './control/OctopusRequest'
+import { OctopusMind } from './control/OctopusMind'
 
 export class octopus {
 
@@ -84,13 +83,7 @@ export class octopus {
      * @returns {void}
      */
     static fullActive(){
-        const body = new OctopusComponent('body')
-        body.render(OctopusTemplates.getTemplates())
-
-        body.use('addEventListener', 'submit', (e: any) => {
-            e.preventDefault()
-            new OctopusRequest(e.target.action, new FormData(e.target)).autoprocess()
-        })
+        OctopusMind.takeControl()
     }
 
 }

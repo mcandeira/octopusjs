@@ -1,22 +1,41 @@
 import { OctopusAutoProcess } from './OctopusAutoProcess'
+import { OctopusUtils } from './OctopusUtils'
 
 export class OctopusRequest {
 
-    url: any
-    data: any
+    private url: string
+    private data: FormData|undefined
     
-    constructor(url: any, data: any = null){this.url = url; this.data = data}
+    constructor(url: string, data: FormData|undefined = undefined)
+    {
+        this.url = url
+        this.data = data
+    }
 
-    get(callback: any, callbackError = callback){this.#fetch(new Request(`${this.url}${this.data ? '?' + new URLSearchParams(this.data) : ''}`), callback, callbackError)}
+    get(callback: Function, callbackError: Function = callback): void
+    {
+        const queryString = this.data ? new URLSearchParams(this.data as any).toString() : ''
+        const separator = this.url.includes('?') ? '&' : '?'
+        const finalUrl = queryString ? `${this.url}${separator}${queryString}` : this.url
 
-    post(callback: any, callbackError = callback){this.#fetch(new Request(this.url, {method: 'POST', body: this.data}), callback, callbackError)}
+        this.fetch(new Request(finalUrl), callback, callbackError)
+    }
 
-    autoprocess(){this.post((data: any) => {new OctopusAutoProcess(data)})}
+    post(callback: Function, callbackError: Function = callback): void
+    {
+        this.fetch(new Request(this.url, {method: 'POST', body: this.data}), callback, callbackError)
+    }
 
-    #fetch(request: any, callback: any, callbackError: any){
+    autoprocess(): void
+    {
+        this.post((data: any) => {new OctopusAutoProcess(data)})
+    }
+
+    private fetch(request: Request, callback: Function, callbackError: Function): void
+    {
         fetch(request)
         .then((response) => {
-            if(!response.ok){throw {error: `[Octopus] Request Error: ${response.status} ${response.statusText}.`}}
+            if(!response.ok){throw {error: `${OctopusUtils.constant.requestError} ${response.status} ${response.statusText}.`}}
 
             const contentType = response.headers.get('Content-Type')
             if (contentType && contentType.includes('application/json')) return response.json()

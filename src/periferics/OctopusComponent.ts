@@ -146,9 +146,9 @@ export class OctopusComponent {
      * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
      * @returns {void}
      */
-    sendValue(name: string, value: any, override: boolean = false): void
+    setValue(name: string, value: any, override: boolean = false): void
     {
-        OctopusNervousSystem.registerValue(name, value, override)
+        OctopusNervousSystem.setValue(name, value, override)
     }
 
     /**
@@ -160,7 +160,7 @@ export class OctopusComponent {
      */
     receiveValue(name: string, callback: Function, remember: boolean = true): void
     {
-        OctopusNervousSystem.deliverValue(name, callback, remember)
+        OctopusNervousSystem.receiveValue(name, callback, remember)
     }
 
     /**
@@ -170,9 +170,9 @@ export class OctopusComponent {
      * @param {string} password - The password required to retrieve the value.
      * @returns {void}
      */
-    sendProtected(name: string, value: any, password: string): void
+    setProtected(name: string, value: any, password: string): void
     {
-        OctopusNervousSystem.registerProtected(name, value, password)
+        OctopusNervousSystem.setProtected(name, value, password)
     }
 
     /**
@@ -185,7 +185,7 @@ export class OctopusComponent {
      */
     receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
     {
-        OctopusNervousSystem.deliverProtected(name, password, callback, remember)
+        OctopusNervousSystem.receiveProtected(name, password, callback, remember)
     }
 
     /**
@@ -195,20 +195,21 @@ export class OctopusComponent {
      * @param {boolean} [override=false] - If true, overwrites an existing helper.
      * @returns {void}
      */
-    sendHelper(name: string, callback: Function, override: boolean = false): void
+    setHelper(name: string, callback: Function, override: boolean = false): void
     {
-        OctopusNervousSystem.registerHelper(name, callback, override)
+        OctopusNervousSystem.setHelper(name, callback, override)
     }
 
     /**
      * Retrieves or subscribes to a global helper function.
      * @param {string} name - The name of the registered helper.
      * @param {Function} callback - The function that will receive the helper.
+     * @param {boolean} [remember=false] - If true, the helper will be received whenever it changes.
      * @returns {void}
      */
-    receiveHelper(name: string, callback: Function): void
+    receiveHelper(name: string, callback: Function, remember: boolean = false): void
     {
-        OctopusNervousSystem.deliverHelper(name, callback)
+        OctopusNervousSystem.receiveHelper(name, callback, remember)
     }
 
     /**
@@ -220,18 +221,19 @@ export class OctopusComponent {
      */
     setAction(name: string, action: Function, override: boolean = false): void
     {
-        OctopusNervousSystem.registerAction(name, action, override)
+        OctopusNervousSystem.setAction(name, action, override)
     }
 
     /**
      * Triggers a globally registered action.
      * @param {string} name - The name of the action to trigger.
      * @param {any} [value=undefined] - The optional payload to pass to the action.
+     * @param {boolean} [remember=false] - If true, the action will be triggered whenever it changes.
      * @returns {void}
      */
-    triggerAction(name: string, value: any = undefined): void
+    triggerAction(name: string, value: any = undefined, remember: boolean = false): void
     {
-        OctopusNervousSystem.triggerAction(name, value)
+        OctopusNervousSystem.triggerAction(name, value, remember)
     }
 
 /* =====================================================================
@@ -245,9 +247,9 @@ export class OctopusComponent {
      * @param {boolean} [override=false] - If true, overwrites an existing prop with the same name.
      * @returns {void}
      */
-    sendProp(name: string, value:any, override: boolean = false): void
+    setProp(name: string, value:any, override: boolean = false): void
     {
-        OctopusNervousSystem.registerProp(this._ref, name, value, override)
+        OctopusNervousSystem.setProp(this._ref, name, value, override)
     }
 
     /**
@@ -259,7 +261,7 @@ export class OctopusComponent {
      */
     receiveProp(name: string, callback: Function, remember: boolean = true): void
     {
-        OctopusNervousSystem.deliverProp(this._ref, name, callback, remember)
+        OctopusNervousSystem.receiveProp(this._ref, name, callback, remember)
     }
 
     /**
@@ -269,21 +271,21 @@ export class OctopusComponent {
      * @param {boolean} [override=false] - If true, overwrites an existing child receiver.
      * @returns {void}
      */
-    receiveChild(name: string, callback: Function, override: boolean = false): void
+    setChildListener(name: string, callback: Function, override: boolean = false): void
     {
-        OctopusNervousSystem.receiveChild(this._ref, name, callback, override)
+        OctopusNervousSystem.setChildListener(this._ref, name, callback, override)
     }
 
     /**
      * Emits an event or data upwards to parent component.
      * @param {string} name - The name of the parent event/data.
      * @param {any} value - The payload to send upwards.
-     * @param {boolean} [remember=true] - If true, the parent will retain this data.
+     * @param {boolean} [remember=true] - If true, the parent listener will be triggered whenever it changes.
      * @returns {void}
      */
-    sendParent(name: string, value: any): void
+    receiveChildListener(name: string, value: any, remember: boolean = true): void
     {
-        OctopusNervousSystem.sendParent(this._ref, name, value)    
+        OctopusNervousSystem.receiveChildListener(this._ref, name, value, remember)
     }
 
 /* =====================================================================
@@ -291,7 +293,7 @@ export class OctopusComponent {
    ===================================================================== */
 
     /**
-     * Renders content in the DOM in an ultra-efficient way.
+     * Renders content in the DOM.
      * @param {Input} input - Template (OctopusComponent, Element or string) or Array [Template, data] to process.
      * @param {Position} [position='default'] - Relative position where to insert the result.
      * @param {OctopusComponent|Element} [relativeElement] - Relative element to insert the result.

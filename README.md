@@ -3,14 +3,14 @@
 Develop smart frontend components with the raw power of native HTML, CSS and JavaScript using this high-performance distributed intelligence framework.
 
 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-    <img src="https://img.shields.io/badge/Performance-~11ms%20(1k%20items)-seagreen?style=for-the-badge&logo=octostop" alt="Performance">
-    <img src="https://img.shields.io/badge/Size-3.8kB%20Gzipped-007ec6?style=for-the-badge" alt="Size">
+    <img src="https://img.shields.io/badge/Performance-~11ms%20(1k%20items)-seagreen?style=for-the-badge" alt="Performance">
+    <img src="https://img.shields.io/badge/Size-4.9kB%20Gzipped-007ec6?style=for-the-badge" alt="Size">
     <img src="https://img.shields.io/badge/Logic-Distributed%20Intelligence-darkorchid?style=for-the-badge" alt="Logic">
     <img src="https://img.shields.io/badge/Dependencies-0-fe7d37?style=for-the-badge" alt="Dependencies">
     <img src="https://img.shields.io/npm/v/octopus-js-native?style=for-the-badge&color=critical" alt="NPM Version">
 </div>
 
-<br><hr>
+<hr>
 
 Render 1,000 reactive components in **~11ms** (logic execution) using only native web standards.
 
@@ -46,9 +46,9 @@ To achieve this, OctopusJS distributes its logic across **Octopus Components**. 
 
 [<h2 id="advantages">Advantages</h2>](#advantages)
 
-+ **As fast as Vanilla:** It sounds impossible, but it's real. Benchmarks show OctopusJS outperforming manual DOM manipulation in complex renders by using a highly optimized, near-browser logic that minimizes reflows.
++ **As fast as Vanilla:** Octopus Components run directly on the browser without abstractions so the overhead is literally cero.
 
-+ **Featherweight:** At only 3.8kB Gzipped, it flies on any device and keeps the memory footprint at an absolute minimum.
++ **Featherweight:** At 4.9kB Gzipped, it flies on any device and keeps the memory footprint at an absolute minimum.
 
 + **True Encapsulation:** Build truly independent components with scoped logic and styles without the complexity of Shadow DOM if you don't need it.
 
@@ -401,21 +401,21 @@ Accessed via `octopus.getComponent()`, these methods provide granular control ov
 * **`deleteAll(selector)`**: Efficiently removes all matching child elements from the DOM.
 * **`onMount(callback)`**: Executes code as soon as the component is effectively attached to the DOM.
 * **`onUnmount(callback)`**: Triggers when the component is removed from the DOM.
-* **`render(input, position, relativeElement)`**: The high-performance engine that injects templates or strings at abyssal speeds.
+* **`render(input, position, relativeElement)`**: The engine that injects templates or strings.
 
 ### 2. Parent-Child Communication (Directed Flow)
 Built-in methods to bridge the gap between nested components:
 
-* **`setProp()` & `getProp()`**: Allows a parent to pass data down to its children (Top-down data flow).
-* **`sendParent()` & `listenChild()`**: Enables a child to emit data or signals up to its parent (Bottom-up event flow).
+* **`setProp()` & `receiveProp()`**: Allows a parent to pass data down to its children (Top-down data flow).
+* **`setChildListener()` & `receiveChildListener()`**: Enables a child to emit data or signals up to its parent (Bottom-up event flow).
 
 ### 3. The "Global Bridge" (Decoupled Communication)
 These functions allow any two components to talk to each other, even if they aren't related in the DOM tree:
 
-* **`setVal()` & `getVal()`**: A lightweight global state manager to share reactive values.
-* **`setHelper()` & `getHelper()`**: Register and reuse utility functions across your entire application.
+* **`setValue()` & `receiveValue()`**: A lightweight global state manager to share reactive values.
+* **`setProtected()` & `receiveProtected()`**: Reactive values protected by password.
+* **`setHelper()` & `receiveHelper()`**: Register and reuse utility functions across your entire application.
 * **`setAction()` & `triggerAction()`**: A powerful command pattern to trigger specific behaviors remotely.
-* **`setSecret()` & `getSecret()`**: **Unique Feature:** Secure data sharing using password-protected keys for sensitive information.
 
 ### 4. Advanced Server Integration
 * **`fullActive()`**: Enables OctopusJS to orchestrate all server-side information exchange, turning your app into a high-performance, reactive SPA (Single Page Application) engine.
@@ -436,7 +436,7 @@ OctopusJS doesn't impose arbitrary limits on your creativity. Its architecture i
 + #### Modular Behavior and Styles:
     You are not restricted to a single script or style tag. You can fragment your component's logic and aesthetics for better maintainability:
 
-    * **Multiple Scripts:** Place as many `<script type="module">` tags as needed. Use the `class` attribute to differentiate them (e.g., `class="octopus logic"`, `class="octopus events"`).
+    * **Multiple Scripts:** Place as many `<script type="module">` tags as needed. Use the `title` attribute to differentiate them (e.g., `title="logic"`, `title="events"`).
     * **Multiple Styles:** Use several `<style>` blocks to organize your CSS. By using `@scope` in each, you maintain perfect encapsulation while keeping your styles modular.
 
     This "Multi-Tag" approach allows you to separate concerns within the same component wrapper without any performance penalty.
@@ -450,7 +450,7 @@ Most modern frameworks rely on a **Virtual DOM**—a heavy, memory-consuming abs
 
 #### 1\. No Virtual DOM, No Overhead
 
-OctopusJS doesn't waste cycles comparing virtual trees. It uses **Direct DOM Manipulation** through highly optimized native methods like `insertAdjacentElement`. When a component renders, it's not "calculating" a change; it's performing an **atomic injection** directly into the browser's render tree.
+OctopusJS doesn't waste cycles comparing virtual trees. It uses **Direct DOM Manipulation** through highly optimized native methods. When a component renders, it's not "calculating" a change; it's performing an **atomic injection** directly into the browser's render tree.
 
 #### 2\. Distributed Intelligence
 
@@ -460,11 +460,7 @@ Instead of a centralized "Engine" that manages the entire application state (and
   * When a component updates, **only that component's scope is affected.**
   * The rest of the application remains untouched, ensuring that performance stays constant regardless of the application's size.
 
-#### 3\. Memory Efficiency & Live NodeLists
-
-OctopusJS is designed to be "garbage-collector friendly." By using **DocumentFragments** and moving nodes instead of cloning them, **dramatically reducing** memory pressure. We leverage the browser's own **Live NodeLists** to handle template iterations, which is the fastest way possible to move elements in the DOM.
-
-#### 4\. Native Standard Alignment
+#### 3\. Native Standard Alignment
 
 By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifting of encapsulation to the browser's C++ core instead of simulating it with expensive JavaScript workarounds.
 
@@ -475,7 +471,7 @@ By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifti
 
 [<h2 id="release">Release Notes</h2>](#release)
 
-> The "Abyssal Octopus" emerges from the dark and deep abyss to surprise the world with its awesome intelligence, spectacular efficiency, and unparalleled agility in wielding the DOM. No one expected the appearance of this powerful rival, but OctopusJS has arrived to stay and challenge the status quo.
+> The "Abyssal Octopus" emerges from the deep abyss to surprise everybody with its awesome intelligence, spectacular efficiency, and unparalleled agility in wielding the DOM. No one expected the appearance of this new player, but OctopusJS has arrived to stay and challenge the status quo.
 >
 > The v1.0.0 "Abyssal Octopus" release is a statement of intent. Tired of false promises of "better DX" that turn into development nightmares, OctopusJS comes to offer developers a true path to the pinnacle of performance and freedom.
 
@@ -488,7 +484,7 @@ By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifti
 
 | Framework       | Render Time (1k items) | Size (Gzipped) | DOM Strategy         |
 |-----------------|------------------------|----------------|----------------------|
-| **OctopusJS** | **~54.4ms (avg)** | **3.8kB** | **Atomic Injection** |
+| **OctopusJS** | **~54.4ms (avg)** | **4.9kB** | **Atomic Injection** |
 | Vanilla JS      | ~50.12ms (avg)                  | 0kB            | Manual Manipulation  |
 | React 18        | ~145ms                 | ~42kB          | Virtual DOM          |
 | Vue 3           | ~110ms                 | ~33kB          | Virtual DOM / Proxy  |

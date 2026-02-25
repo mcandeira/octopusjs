@@ -31,9 +31,9 @@ export class octopus {
      * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
      * @returns {void}
      */ 
-    static registerValue(name: string, value: any, override: boolean = false): void
+    static setValue(name: string, value: any, override: boolean = false): void
     {
-        OctopusNervousSystem.registerValue(name, value, override)
+        OctopusNervousSystem.setValue(name, value, override)
     }
 
     /**
@@ -44,9 +44,9 @@ export class octopus {
      * @param {boolean} [remember=true] - If true, the value will be deliver whenever it changes.
      * @returns {void}
      */
-    static deliverValue(name: string, callback: Function, remember: boolean = true): void
+    static receiveValue(name: string, callback: Function, remember: boolean = true): void
     {
-        OctopusNervousSystem.deliverValue(name, callback, remember)
+        OctopusNervousSystem.receiveValue(name, callback, remember)
     }
 
 /* =====================================================================
@@ -61,9 +61,9 @@ export class octopus {
      * @param {string} password - The password required to retrieve the value.
      * @returns {void}
      */
-    static registerProtected(name: string, value: any, password: string): void
+    static setProtected(name: string, value: any, password: string): void
     {
-        OctopusNervousSystem.registerProtected(name, value, password)
+        OctopusNervousSystem.setProtected(name, value, password)
     }
 
     /**
@@ -75,9 +75,9 @@ export class octopus {
      * @param {boolean} [remember=true] - If true, the value will be deliver whenever it changes.
      * @returns {void}
      */
-    static deliverProtected(name: string, password: string, callback: Function, remember: boolean = true): void
+    static receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
     {
-        OctopusNervousSystem.deliverProtected(name, password, callback, remember)
+        OctopusNervousSystem.receiveProtected(name, password, callback, remember)
     }
 
 /* =====================================================================
@@ -92,9 +92,9 @@ export class octopus {
      * @param {boolean} [override=false] - If true, overwrites an existing helper with the same name.
      * @returns {void}
      */
-    static registerHelper(name: string, callback: Function, override: boolean = false): void
+    static setHelper(name: string, callback: Function, override: boolean = false): void
     {
-        OctopusNervousSystem.registerHelper(name, callback, override)
+        OctopusNervousSystem.setHelper(name, callback, override)
     }
 
     /**
@@ -105,9 +105,9 @@ export class octopus {
      * @param {boolean} [remember=false] - If true, the helper will be deliver whenever it changes.
      * @returns {void}
      */
-    static deliverHelper(name: string, callback: Function, remember: boolean = false): void
+    static receiveHelper(name: string, callback: Function, remember: boolean = false): void
     {
-        OctopusNervousSystem.deliverHelper(name, callback, remember)
+        OctopusNervousSystem.receiveHelper(name, callback, remember)
     }
 
 /* =====================================================================
@@ -122,9 +122,9 @@ export class octopus {
      * @param {boolean} [override=false] - If true, overwrites an existing action with the same name.
      * @returns {void}
      */
-    static registerAction(name: string, action: Function, override: boolean = false): void
+    static setAction(name: string, action: Function, override: boolean = false): void
     {
-        OctopusNervousSystem.registerAction(name, action, override)
+        OctopusNervousSystem.setAction(name, action, override)
     }
 
     /**

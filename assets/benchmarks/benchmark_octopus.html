@@ -24,7 +24,7 @@
         </template>
 
         <script type="module" class="octopus">
-            import { octopus } from '../octopus.js'
+            import { octopus } from '../../dist/octopus.min.js'
 
             const component = octopus.getComponent()
             const template = component.getChild('template')
@@ -43,7 +43,7 @@
                     const total = (end -start).toFixed(4)
                     console.log(`🚀 OctopusJS Render Time: ${total}ms`)
 
-                    octopus.getComponent('body').render(`<div style="padding:10px; background:lawngreen; font-weight:bold">Time: ${total}ms</div>`, 'before')
+                    octopus.getComponent('body').render(`<div style="padding:10px; background:lawngreen; font-weight:bold">Time: ${total}ms</div>`, 'beforebegin')
                 }, 0)
             })
         </script>

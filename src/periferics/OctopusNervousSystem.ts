@@ -6,7 +6,7 @@ export class OctopusNervousSystem {
 
     private static readonly nerveRing: Map<string, DataActionAssociation> = new Map()
 
-    private static registerData(prefix: string, name: string, data: any, override: boolean = false): DataActionAssociation|undefined|false
+    private static setData(prefix: string, name: string, data: any, override: boolean = false): DataActionAssociation|undefined|false
     {
         const content = this.nerveRing.get(`${prefix}::${name}`)
 
@@ -19,7 +19,7 @@ export class OctopusNervousSystem {
         return content
     }
 
-    private static deliverData(prefix: string, name: string, value: any, remember: boolean = false): DataActionAssociation|undefined
+    private static receiveData(prefix: string, name: string, value: any, remember: boolean = false): DataActionAssociation|undefined
     {
         const content = this.nerveRing.get(`${prefix}::${name}`)
 
@@ -32,61 +32,61 @@ export class OctopusNervousSystem {
     OCTOPUS VALUES, HELPERS, ACTIONS
    ===================================================================== */
 
-    static registerValue(name: string, value: any, override: boolean = false): void
+    static setValue(name: string, value: any, override: boolean = false): void
     {
-        OctopusUtils.function.validate(this.registerValue, [name, String], [override, Boolean])
+        OctopusUtils.function.validate(this.setValue, [name, String], [override, Boolean])
 
-        const content = this.registerData('val', name, value, override)
+        const content = this.setData('val', name, value, override)
         if(content === false) console.warn(OctopusUtils.constant.unOverriddenValue, name)
         else if(content) content.__waiters?.forEach(waiter => {waiter.value(value)})
     }
 
-    static deliverValue(name: string, callback: Function, remember: boolean = true): void
+    static receiveValue(name: string, callback: Function, remember: boolean = true): void
     {
-        OctopusUtils.function.validate(this.deliverValue, [name, String], [callback, Function], [remember, Boolean])
+        OctopusUtils.function.validate(this.receiveValue, [name, String], [callback, Function], [remember, Boolean])
 
-        const content = this.deliverData('val', name, callback, remember)
+        const content = this.receiveData('val', name, callback, remember)
         if(content?.data !== undefined) callback(content.data)
     }
 
-    static registerProtected(name: string, value: any, password: string): void
+    static setProtected(name: string, value: any, password: string): void
     {
-        OctopusUtils.function.validate(this.registerProtected, [name, String], [password, String])
+        OctopusUtils.function.validate(this.setProtected, [name, String], [password, String])
 
-        const content = this.registerData('pro', `${name}::${password}`, value, true)
+        const content = this.setData('pro', `${name}::${password}`, value, true)
         if(content) content.__waiters?.forEach(waiter => {waiter.value(value)})
     }
 
-    static deliverProtected(name: string, password: string, callback: Function, remember: boolean = true): void
+    static receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
     {
-        OctopusUtils.function.validate(this.deliverProtected, [name, String], [password, String], [callback, Function], [remember, Boolean])
+        OctopusUtils.function.validate(this.receiveProtected, [name, String], [password, String], [callback, Function], [remember, Boolean])
 
-        const content = this.deliverData('pro', `${name}::${password}`, callback, remember)
+        const content = this.receiveData('pro', `${name}::${password}`, callback, remember)
         if(content?.data !== undefined) callback(content.data)
     }
 
-    static registerHelper(name: string, callback: Function, override: boolean = false): void
+    static setHelper(name: string, callback: Function, override: boolean = false): void
     {
-        OctopusUtils.function.validate(this.registerHelper, [name, String], [callback, Function], [override, Boolean])
+        OctopusUtils.function.validate(this.setHelper, [name, String], [callback, Function], [override, Boolean])
 
-        const content = this.registerData('help', name, callback, override)
+        const content = this.setData('help', name, callback, override)
         if(content === false) console.warn(OctopusUtils.constant.unOverriddenHelper, name)
         else if(content) content.__waiters?.forEach(waiter => {waiter.value(callback)})
     }
 
-    static deliverHelper(name: string, callback: Function, remember: boolean = false): void
+    static receiveHelper(name: string, callback: Function, remember: boolean = false): void
     {
-        OctopusUtils.function.validate(this.deliverHelper, [name, String], [callback, Function], [remember, Boolean])
+        OctopusUtils.function.validate(this.receiveHelper, [name, String], [callback, Function], [remember, Boolean])
 
-        const content = this.deliverData('help', name, callback, remember)
+        const content = this.receiveData('help', name, callback, remember)
         if(content?.data !== undefined) callback(content.data)
     }
 
-    static registerAction(name: string, action: Function, override: boolean = false): void
+    static setAction(name: string, action: Function, override: boolean = false): void
     {
-        OctopusUtils.function.validate(this.registerAction, [name, String], [action, Function], [override, Boolean])
+        OctopusUtils.function.validate(this.setAction, [name, String], [action, Function], [override, Boolean])
 
-        const content = this.registerData('act', name, action, override)
+        const content = this.setData('act', name, action, override)
         if(content === false) console.warn(OctopusUtils.constant.unOverriddenAction, name)
         else if(content) content.__waiters?.forEach(waiter => {action(waiter.value)})
     }
@@ -95,7 +95,7 @@ export class OctopusNervousSystem {
     {
         OctopusUtils.function.validate(this.triggerAction, [name, String], [remember, Boolean])
 
-        const content = this.deliverData('act', name, value, remember)
+        const content = this.receiveData('act', name, value, remember)
         if(content?.data !== undefined) content.data(value)
     }
 
@@ -105,9 +105,9 @@ export class OctopusNervousSystem {
 
     private static readonly nerveCord: WeakMap<Element, Map<string, DataActionAssociation>> = new WeakMap()
 
-    static registerProp(reference: Element, name: string, value: any, override: boolean = false): void
+    static setProp(reference: Element, name: string, value: any, override: boolean = false): void
     {
-        OctopusUtils.function.validate(this.registerProp, [reference, Element], [name, String], [override, Boolean])
+        OctopusUtils.function.validate(this.setProp, [reference, Element], [name, String], [override, Boolean])
         
         let selfProps = this.nerveCord.get(reference)
         const content = selfProps?.get(`direct::${name}`)
@@ -121,9 +121,9 @@ export class OctopusNervousSystem {
         content?.__waiters?.forEach(waiter => {waiter.value(value)})
     }
 
-    static deliverProp(reference: Element, name: string, callback: Function, remember: boolean = true): void
+    static receiveProp(reference: Element, name: string, callback: Function, remember: boolean = true): void
     {
-        OctopusUtils.function.validate(this.deliverProp, [reference, Element], [name, String], [callback, Function], [remember, Boolean])
+        OctopusUtils.function.validate(this.receiveProp, [reference, Element], [name, String], [callback, Function], [remember, Boolean])
 
         const parent = reference.parentElement?.closest('*:has(> script.octopus)')
         if(!parent){console.warn(OctopusUtils.constant.parentPropNotFound, reference, name); return}
@@ -139,9 +139,9 @@ export class OctopusNervousSystem {
         }
     }
 
-    static receiveChild(reference: Element, name: string, callback: Function, override: boolean = false): void
+    static setChildListener(reference: Element, name: string, callback: Function, override: boolean = false): void
     {
-        OctopusUtils.function.validate(this.receiveChild, [reference, Element], [name, String], [callback, Function], [override, Boolean])
+        OctopusUtils.function.validate(this.setChildListener, [reference, Element], [name, String], [callback, Function], [override, Boolean])
 
         let selfProps = this.nerveCord.get(reference)
         const content = selfProps?.get(`inverse::${name}`)
@@ -155,9 +155,9 @@ export class OctopusNervousSystem {
         content?.__waiters?.forEach(waiter => {callback(waiter.value)})
     }
 
-    static sendParent(reference: Element, name: string, value: any = null, remember: boolean = false): void
+    static receiveChildListener(reference: Element, name: string, value: any = null, remember: boolean = false): void
     {
-        OctopusUtils.function.validate(this.sendParent, [reference, Element], [name, String], [remember, Boolean])
+        OctopusUtils.function.validate(this.receiveChildListener, [reference, Element], [name, String], [remember, Boolean])
 
         const parent = reference.parentElement?.closest('*:has(> script.octopus)')
         if(!parent){console.warn(OctopusUtils.constant.parentListenerNotFound, reference, name); return}

@@ -33,7 +33,7 @@ export class OctopusEngine {
             
             if(condition) {
                 const innerTemplate = string.substring(tag.ending, tag.closeTag.starting)
-                return this.processTemplate(innerTemplate, data)
+                return OctopusEngine.processTemplate(innerTemplate, data)
             }
             return ''
         },

@@ -1,7 +1,6 @@
 import { OctopusComponent } from './OctopusComponent'
 
 export type SimpleInput = string|Element|OctopusComponent
-
 export type Input = SimpleInput|[SimpleInput, Record<string,any>]
 
 export type Selector = string|Element|undefined

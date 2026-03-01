@@ -9,11 +9,12 @@
 
     <header>
         <h1>OctopusJS Benchmark 🐙</h1>
-        <button>LIBERAR AL KRAKEN (1,000 Items)</button>
-        <div>Presiona el botón para medir el tiempo...</div>
+        <button>UNLEASH THE OCTOPUS (1,000 Items)</button>
+        <div>Press the button to measure time...</div>
 
         <script type="module" class="octopus">
             import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            //import { octopus } from '../dist/octopus.min.js'
             {
                 const component = octopus.getComponent(this)
                 const button = component.getChild('button')
@@ -61,6 +62,8 @@
     </header>
 
     <main>
+        <div></div>
+
         <template>
             8{for item in items}
             <div class="octopus-card">
@@ -73,6 +76,7 @@
 
         <script type="module" class="octopus">
             import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
+            //import { octopus } from '../dist/octopus.min.js'
             {
                 const component = octopus.getComponent(this)
                 const template = component.getChild('template')
@@ -88,14 +92,15 @@
                     button.use('addEventListener', 'click', () => {
 
                         result.set('innerHTML', '')
+                        container.set('innerHTML', '')
                         
                         const start = performance.now()
-                        component.render([template, { items: rawData }])
+                        component.render([template, { items: rawData }], 'default', container)
                         
                         const end = performance.now()
                         const duration = (end - start).toFixed(2)
 
-                        result.set('innerText', `🚀 1,000 componentes renderizados en: ${duration} ms`)
+                        result.set('innerText', `🚀 1,000 components renderized in: ${duration} ms`)
                     })
 
                 })
@@ -104,7 +109,7 @@
 
         <style>
             @scope{
-                &{
+                >div{
                     display: grid;
                     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                     gap: 10px;

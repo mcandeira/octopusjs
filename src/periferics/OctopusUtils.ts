@@ -1,25 +1,39 @@
 import { OctopusComponent } from './OctopusComponent'
 
-export type SimpleInput = string|Element|OctopusComponent
+export type Selector = string|Element|undefined
+
+export type SimpleInput = OctopusComponent|Element|string
 export type Input = SimpleInput|[SimpleInput, Record<string,any>]
 
-export type Selector = string|Element|undefined
+export type Position = 'beforebegin'|'afterbegin'|'beforeend'|'afterend'|'into'|'default'
 
 export const OctopusUtils = {
 
+    error: (message: string): string => `[Octopus Periferic Error] ${message}`,
+
     constant:
     {
-        methodNotExist: '[Octopus] The HTMLElement method does not exist:',
-        notHimself: '[Octopus] The "into" option requires a relative element different from himself.',
+        methodNotExist: (method: string): string => OctopusUtils.error(`The "${method}" HTMLElement method does not exist.`),
+        notHimself: () => OctopusUtils.error(`The "into" option requires a relative element different from himself.`),
 
-        unOverriddenValue: '[Octopus] The value cannot be overridden: ',
-        unOverriddenHelper: '[Octopus] The helper cannot be overridden: ',
-        unOverriddenAction: '[Octopus] The action cannot be overridden: ',
-        unOverriddenProp: '[Octopus] The prop cannot be overridden: ',
-        unOverriddenChild: '[Octopus] The child receiver cannot be overridden: ',
+        unOverriddenValue: (value: string): string => OctopusUtils.error(`The "${value}" value cannot be overridden.`),
+        unOverriddenHelper: (helper: string): string => OctopusUtils.error(`The "${helper}" helper cannot be overridden.`),
+        unOverriddenAction: (action: string): string => OctopusUtils.error(`The ${action} action cannot be overridden.`),
+        unOverriddenProp: (prop: string): string => OctopusUtils.error(`The ${prop} prop cannot be overridden.`),
+        unOverriddenListener: (listener: string): string => OctopusUtils.error(`The "${listener}" child listener cannot be overridden.`),
 
-        parentPropNotFound: '[Octopus] Parent not found for prop: ',
-        parentListenerNotFound: '[Octopus] Parent not found for listener: ',
+        parentPropNotFound: (prop: string): string => OctopusUtils.error(`Prop "${prop}" parent not found.`),
+        parentListenerNotFound: (listener: string): string => OctopusUtils.error(`Listener "${listener}" parent not found.`),
+
+        invalidValidateArguments: (method: string, position: number): string => 
+        {
+            return OctopusUtils.error(`Invalid validate arguments in: ${method}, parameter position '${position}'. Expected at least one value and one check type.`)
+        },
+
+        invalidArgumentType: (method: string, position: number, param: string, expected: string): string =>
+        {
+            return OctopusUtils.error(`Invalid argument type in: ${method}, parameter position '${position}'. Expected: ${expected}, got ${param}.`)
+        }
     },
 
     function:
@@ -32,7 +46,7 @@ export const OctopusUtils = {
 
                 const [value, ...types] = params[position]
 
-                if(types.length === 0) throw new Error(OctopusUtils.function.invalidValidateArguments(caller.name, position + 1))
+                if(types.length === 0) throw new Error(OctopusUtils.constant.invalidValidateArguments(caller.name, position + 1))
 
                 let matches = false
                 for(const type of types){
@@ -43,21 +57,11 @@ export const OctopusUtils = {
                     const valueName = value?.constructor?.name ?? typeof value
                     const typeNames = types.map(type => type?.name ?? String(type)).join(' | ')
 
-                    throw new TypeError(OctopusUtils.function.invalidArgumentType(caller.name, position + 1, valueName, typeNames))
+                    throw new TypeError(OctopusUtils.constant.invalidArgumentType(caller.name, position + 1, valueName, typeNames))
                 }
                 
             }
         },
-
-        invalidValidateArguments(method: string, position: number): string
-        {
-            return `[Octopus Error] Invalid validate arguments in: ${method}, parameter position '${position}'. Expected at least one value and one check type`
-        },
-
-        invalidArgumentType(method: string, position: number, param: string, expected: string): string
-        {
-            return `[Octopus Error] Invalid argument type in: ${method}, parameter position '${position}'. Expected: ${expected}, got ${param}.`
-        }
     }
 
 } as const

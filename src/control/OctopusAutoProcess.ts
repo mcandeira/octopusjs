@@ -3,7 +3,7 @@ import { OctopusUtils } from './OctopusUtils'
 export class OctopusAutoProcess {
 
     constructor(data: any){
-        if(!data || typeof data !== 'object'){console.error(OctopusUtils.constant.autoProcessError); return}
+        if(!data || typeof data !== 'object'){console.error(OctopusUtils.constant.autoProcessError(this.constructor.name)); return}
         
         if(data instanceof Error){OctopusUtils.function.generateDialog('error', data.message, 'bg-danger'); return}
 

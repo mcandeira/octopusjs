@@ -1,6 +1,6 @@
 {
   "name": "octopus-js-native",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "OctopusJS 🐙 | High-performance distributed intelligence frontend development framework.",
   "type": "module",
   "main": "./dist/octopus.min.js",

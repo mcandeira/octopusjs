@@ -4,7 +4,7 @@ Develop smart frontend components with the raw power of native HTML, CSS and Jav
 
 <div style="display:flex; gap:10px; flex-wrap:wrap;">
     <img src="https://img.shields.io/badge/Performance-~11ms%20(1k%20items)-seagreen?style=for-the-badge" alt="Performance">
-    <img src="https://img.shields.io/badge/Size-4.9kB%20Gzipped-007ec6?style=for-the-badge" alt="Size">
+    <img src="https://img.shields.io/badge/Size-5.3kB%20Gzipped-007ec6?style=for-the-badge" alt="Size">
     <img src="https://img.shields.io/badge/Logic-Distributed%20Intelligence-darkorchid?style=for-the-badge" alt="Logic">
     <img src="https://img.shields.io/badge/Dependencies-0-fe7d37?style=for-the-badge" alt="Dependencies">
     <img src="https://img.shields.io/npm/v/octopus-js-native?style=for-the-badge&color=critical" alt="NPM Version">
@@ -37,7 +37,7 @@ Render 1,000 reactive components in **~11ms** (logic execution) using only nativ
 
 OctopusJS is a high-performance, distributed intelligence frontend development framework designed for web developers who demand an intuitive DX (Developer Experience) alongside "science-fiction" execution speeds.
 
-Unlike traditional frameworks, OctopusJS **does not alter** the underlying behavior of web technologies. Instead, it leverages them directly, ensuring full compatibility with all native features. This allows developers to build sophisticated components without sacrificing the freedom and raw power of native HTML, CSS, and JavaScript.
+Unlike traditional frameworks, OctopusJS **does not alter** the underlying behavior of web technologies. Instead, it leverages them directly, ensuring full compatibility with all native features. This allows developers to easily build sophisticated components without sacrificing the freedom and raw power of native HTML, CSS, and JavaScript.
 
 To achieve this, OctopusJS distributes its logic across **Octopus Components**. These components represent a new paradigm in web development, allowing you to manage encapsulated logic, styles, and templates using pure web standards.
 
@@ -48,7 +48,7 @@ To achieve this, OctopusJS distributes its logic across **Octopus Components**. 
 
 + **As fast as Vanilla:** Octopus Components run directly on the browser without abstractions so the overhead is literally cero.
 
-+ **Featherweight:** At 4.9kB Gzipped, it flies on any device and keeps the memory footprint at an absolute minimum.
++ **Featherweight:** At 5.3kB Gzipped, it flies on any device and keeps the memory footprint at an absolute minimum.
 
 + **True Encapsulation:** Build truly independent components with scoped logic and styles without the complexity of Shadow DOM if you don't need it.
 
@@ -130,7 +130,7 @@ Test this quick example in less than 60 seconds:
 
 + **Experiment:** Change the HTML code to whatever you want.
 
-+ **Program:** Change all the JS code to whatever you want. OctopusJS only adds utility functions but you can manipulate the DOM directly.
++ **Program:** Change all the JS code to whatever you want. OctopusJS only adds utility functions. You can manipulate the DOM directly.
 
 + **Design:** Change the CSS styles to whatever you want.
 
@@ -163,7 +163,7 @@ import { octopus } from 'octopus-js-native'
 
 #### 2\. Via CDN (Quick start)
 
-For rapid prototyping or small projects, you can include OctopusJS directly from a CDN like Unpkg or JSDelivr:
+For fast prototyping or small projects, you can include OctopusJS directly from a CDN like Unpkg or JSDelivr:
 
 ```html
 <script type="module">
@@ -471,7 +471,7 @@ By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifti
 
 [<h2 id="release">Release Notes</h2>](#release)
 
-> The "Abyssal Octopus" emerges from the deep abyss to surprise everybody with its awesome intelligence, spectacular efficiency, and unparalleled agility in wielding the DOM. No one expected the appearance of this new player, but OctopusJS has arrived to stay and challenge the status quo.
+> The "Abyssal Octopus" emerges from the deep abyss to show to the world its awesome intelligence, spectacular efficiency, and unparalleled agility in wielding the DOM.
 >
 > The v1.0.0 "Abyssal Octopus" release is a statement of intent. Tired of false promises of "better DX" that turn into development nightmares, OctopusJS comes to offer developers a true path to the pinnacle of performance and freedom.
 
@@ -484,7 +484,7 @@ By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifti
 
 | Framework       | Render Time (1k items) | Size (Gzipped) | DOM Strategy         |
 |-----------------|------------------------|----------------|----------------------|
-| **OctopusJS** | **~54.4ms (avg)** | **4.9kB** | **Atomic Injection** |
+| **OctopusJS** | **~54.4ms (avg)** | **5.3kB** | **Atomic Injection** |
 | Vanilla JS      | ~50.12ms (avg)                  | 0kB            | Manual Manipulation  |
 | React 18        | ~145ms                 | ~42kB          | Virtual DOM          |
 | Vue 3           | ~110ms                 | ~33kB          | Virtual DOM / Proxy  |

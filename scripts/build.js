@@ -1,8 +1,8 @@
-import esbuild from 'esbuild';
-import fs from 'fs';
+import esbuild from 'esbuild'
+import fs from 'fs'
 
-const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
-const year = new Date().getFullYear();
+const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+const year = new Date().getFullYear()
 
 const banner = `/**
  * OctopusJS | v${pkg.version} "Abyssal Octopus" 🐙 
@@ -13,7 +13,7 @@ const banner = `/**
  * @see {@link ${pkg.repository.url.replace('git+', '').replace('.git', '')}}
  * @release ${pkg.collaboration}
  * * Characteristics:
- * - 16kB footprint (~4.9kB Gzipped)
+ * - 17kB footprint (~5.3kB Gzipped)
  * - 0.07s LCP | 0.02s CLS
  * - Native ESM Architecture
  * * Copyright (c) ${year} ${pkg.author}
@@ -41,7 +41,7 @@ try {
     banner: { js: banner }
   });
   
-  console.log('✅ Build completada con éxito. Banner inyectado.');
+  console.log('✅ Build completada con éxito.');
 } catch (error) {
   console.error('❌ Error en la build:', error);
   process.exit(1);

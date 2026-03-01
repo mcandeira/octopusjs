@@ -1,8 +1,6 @@
-import { Selector, OctopusUtils, Input } from './OctopusUtils'
+import { Selector, OctopusUtils, Input, Position } from './OctopusUtils'
 import { OctopusNervousSystem } from './OctopusNervousSystem'
-import { OctopusEngine } from '../engine/OctopusEngine'
-
-type Position = 'beforebegin'|'afterbegin'|'beforeend'|'afterend'|'into'|'default'
+import { OctopusEngine } from '../engine/OctopusOldEngine'
 
 const octopusScripts = Array.from(document.querySelectorAll('script.octopus')).reverse()
 
@@ -82,7 +80,7 @@ export class OctopusComponent {
 
         const ref = this._ref as any
         if(typeof ref[method] === 'function') return ref[method](...args)
-        throw new Error(`${OctopusUtils.constant.methodNotExist}${method}`)
+        throw new Error(OctopusUtils.constant.methodNotExist(method))
     }
 
     /**
@@ -113,9 +111,7 @@ export class OctopusComponent {
 
         if(document.body.contains(this._ref)) callback()
         else{
-            new MutationObserver(([], obs) => {
-                if(document.body.contains(this._ref)){callback(); obs.disconnect()}
-            })
+            new MutationObserver(([], obs) => {if(document.body.contains(this._ref)){callback(); obs.disconnect()}})
             .observe(document.body, { childList: true, subtree: true })
         }
     }
@@ -129,9 +125,7 @@ export class OctopusComponent {
     {
         OctopusUtils.function.validate(this.onUnmount, [callback, Function])
         
-        new MutationObserver(([], obs) => {
-            if(!document.body.contains(this._ref)){callback(); obs.disconnect()}
-        })
+        new MutationObserver(([], obs) => {if(!document.body.contains(this._ref)){callback(); obs.disconnect()}})
         .observe(document.body, { childList: true, subtree: true })
     }
 
@@ -140,22 +134,22 @@ export class OctopusComponent {
    ===================================================================== */
 
     /**
-     * Registers a global value in the Central Nervous System.
+     * Sets a value in the Octopus Central Nervous System.
      * @param {string} name - The unique name for the value.
-     * @param {any} value - The data payload to register.
+     * @param {any} value - The data payload to set.
      * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
      * @returns {void}
-     */
+     */ 
     setValue(name: string, value: any, override: boolean = false): void
     {
         OctopusNervousSystem.setValue(name, value, override)
     }
 
     /**
-     * Subscribes to a global value from the Central Nervous System.
-     * @param {string} name - The name of the registered value.
+     * Receive the value setted in the Octopus Central Nervous System.
+     * @param {string} name - The name of the setted value.
      * @param {Function} callback - The function to execute when the value is available.
-     * @param {boolean} [remember=true] - If true, the callback will execute whenever the value changes.
+     * @param {boolean} [remember=true] - If true, the value will be received whenever it changes.
      * @returns {void}
      */
     receiveValue(name: string, callback: Function, remember: boolean = true): void
@@ -163,11 +157,11 @@ export class OctopusComponent {
         OctopusNervousSystem.receiveValue(name, callback, remember)
     }
 
-    /**
-     * Registers a globally protected value requiring a password.
+     /**
+     * Sets a value protected by password in the Octopus Central Nervous System.
      * @param {string} name - The unique name for the protected value.
-     * @param {any} value - The sensitive data payload to register.
-     * @param {string} password - The password required to retrieve the value.
+     * @param {any} value - The protected data payload to set.
+     * @param {string} password - The password required to access the value.
      * @returns {void}
      */
     setProtected(name: string, value: any, password: string): void
@@ -176,11 +170,11 @@ export class OctopusComponent {
     }
 
     /**
-     * Subscribes to a globally protected value using a password.
+     * Receive the protected value setted in the Octopus Central Nervous System.
      * @param {string} name - The name of the protected value.
-     * @param {string} password - The password required to unlock the value.
-     * @param {Function} callback - The function to execute when the value is available.
-     * @param {boolean} [remember=true] - If true, the callback will execute whenever the value changes.
+     * @param {string} password - The password required to access the value.
+     * @param {Function} callback - The function to execute when the protected value is available.
+     * @param {boolean} [remember=true] - If true, the protected value will be received whenever it changes.
      * @returns {void}
      */
     receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
@@ -189,10 +183,10 @@ export class OctopusComponent {
     }
 
     /**
-     * Registers a global helper function.
-     * @param {string} name - The unique name for the helper.
-     * @param {Function} callback - The helper function to register.
-     * @param {boolean} [override=false] - If true, overwrites an existing helper.
+     * Sets a helper function in the Octopus Central Nervous System.
+     * @param {string} name - The unique name for the setted helper.
+     * @param {Function} callback - The helper function to set.
+     * @param {boolean} [override=false] - If true, overwrites an existing helper with the same name.
      * @returns {void}
      */
     setHelper(name: string, callback: Function, override: boolean = false): void
@@ -201,9 +195,9 @@ export class OctopusComponent {
     }
 
     /**
-     * Retrieves or subscribes to a global helper function.
-     * @param {string} name - The name of the registered helper.
-     * @param {Function} callback - The function that will receive the helper.
+     * Receive the helper function setted in the Octopus Central Nervous System.
+     * @param {string} name - The name of the setted helper.
+     * @param {Function} callback - The function to execute when the helper is available.
      * @param {boolean} [remember=false] - If true, the helper will be received whenever it changes.
      * @returns {void}
      */
@@ -213,10 +207,10 @@ export class OctopusComponent {
     }
 
     /**
-     * Registers a global action in the Central Nervous System.
+     * Sets a action function in the Octopus Central Nervous System.
      * @param {string} name - The unique name for the action.
-     * @param {Function} action - The action function to register.
-     * @param {boolean} [override=false] - If true, overwrites an existing action.
+     * @param {Function} action - The action function to set.
+     * @param {boolean} [override=false] - If true, overwrites an existing action with the same name.
      * @returns {void}
      */
     setAction(name: string, action: Function, override: boolean = false): void
@@ -225,10 +219,10 @@ export class OctopusComponent {
     }
 
     /**
-     * Triggers a globally registered action.
+     * Triggers a action setted in the Octopus Central Nervous System.
      * @param {string} name - The name of the action to trigger.
      * @param {any} [value=undefined] - The optional payload to pass to the action.
-     * @param {boolean} [remember=false] - If true, the action will be triggered whenever it changes.
+     * @param {boolean} [remember=false] - If true, the action will trigger whenever it changes.
      * @returns {void}
      */
     triggerAction(name: string, value: any = undefined, remember: boolean = false): void
@@ -241,22 +235,22 @@ export class OctopusComponent {
    ===================================================================== */
 
     /**
-     * Emits a prop value to descendants scoped to this component.
+     * Sets a prop to descendants scoped to this component.
      * @param {string} name - The name of the prop.
      * @param {any} value - The payload of the prop.
      * @param {boolean} [override=false] - If true, overwrites an existing prop with the same name.
      * @returns {void}
      */
-    setProp(name: string, value:any, override: boolean = false): void
+    setProp(name: string, value: any, override: boolean = false): void
     {
         OctopusNervousSystem.setProp(this._ref, name, value, override)
     }
 
     /**
-     * Subscribes to a prop value scoped to this component.
+     * Receive a prop scoped to this component.
      * @param {string} name - The name of the prop.
      * @param {Function} callback - The function to execute when the prop is available.
-     * @param {boolean} [remember=true] - If true, the callback will execute whenever the prop changes.
+     * @param {boolean} [remember=true] - If true, the prop will be receive whenever it changes.
      * @returns {void}
      */
     receiveProp(name: string, callback: Function, remember: boolean = true): void
@@ -265,10 +259,10 @@ export class OctopusComponent {
     }
 
     /**
-     * Subscribes to child events or data scoped to this component.
-     * @param {string} name - The name of the child event/data.
+     * Set a child listener scoped to this component.
+     * @param {string} name - The name of the child emitted event/data.
      * @param {Function} callback - The function to execute when received.
-     * @param {boolean} [override=false] - If true, overwrites an existing child receiver.
+     * @param {boolean} [override=false] - If true, overwrites an existing child listener.
      * @returns {void}
      */
     setChildListener(name: string, callback: Function, override: boolean = false): void
@@ -278,12 +272,12 @@ export class OctopusComponent {
 
     /**
      * Emits an event or data upwards to parent component.
-     * @param {string} name - The name of the parent event/data.
+     * @param {string} name - The name of the data emitted.
      * @param {any} value - The payload to send upwards.
-     * @param {boolean} [remember=true] - If true, the parent listener will be triggered whenever it changes.
+     * @param {boolean} [remember=true] - If true, the parent listener will be executed whenever it changes.
      * @returns {void}
      */
-    receiveChildListener(name: string, value: any, remember: boolean = true): void
+    receiveChildListener(name: string, value: any, remember: boolean = false): void
     {
         OctopusNervousSystem.receiveChildListener(this._ref, name, value, remember)
     }
@@ -302,22 +296,7 @@ export class OctopusComponent {
      */
     render(input: Input, position: Position = 'default', relativeElement: OctopusComponent|Element = this._ref): void
     {
-        const processedInput = OctopusEngine.process(input)
-
-        const relative = relativeElement instanceof OctopusComponent ? relativeElement._ref : relativeElement
-
-        switch(position){
-            case 'beforebegin': relative.before(processedInput); break
-            case 'afterbegin': relative.prepend(processedInput); break
-            case 'beforeend': relative.append(processedInput); break
-            case 'afterend': relative.after(processedInput); break
-            case 'into':
-                if(relative === this._ref) throw new Error(OctopusUtils.constant.notHimself)
-                relative.replaceChildren(processedInput)
-                break
-            default:
-                if(relative === this._ref) relative.append(processedInput)
-                else relative.after(processedInput)
-        }
+        OctopusEngine.render(input, position, relativeElement instanceof OctopusComponent ? relativeElement._ref : relativeElement)
     }
+
 }

@@ -35,7 +35,7 @@ export class OctopusRequest {
     {
         fetch(request)
         .then((response) => {
-            if(!response.ok){throw {error: `${OctopusUtils.constant.requestError} ${response.status} ${response.statusText}.`}}
+            if(!response.ok){throw {error: OctopusUtils.constant.requestError(`${response.status} ${response.statusText}`)}}
 
             const contentType = response.headers.get('Content-Type')
             if (contentType && contentType.includes('application/json')) return response.json()

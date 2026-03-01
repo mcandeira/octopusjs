@@ -19,7 +19,7 @@ export class OctopusPerformance {
 
         if(length < 2){console.warn('[Octopus Performance] Not enough stamps to measure.'); return}
 
-        console.log('%c[Octopus Performance Results]', 'color: #00ffcc; font-weight: bold; font-size: 14px;')
+        console.log('----------------------------------------')
 
         let totalTime = 0
         for(let i = 1; i < length; i++){
@@ -30,15 +30,13 @@ export class OctopusPerformance {
             totalTime += duration
             
             console.log(
-                `⏱️ %c${current.name}%c took %c${duration.toFixed(2)} ms`, 
-                'color: #aaa; font-style: italic;', 
-                'color: inherit;', 
+                `⏱️ ${current.name} took: %c${duration.toFixed(2)} ms`, 
                 'color: #ffaa00; font-weight: bold;'
             )
         }
 
-        console.log('%c----------------------------------------', 'color: #555;')
-        console.log(`%c🚀 Total execution time: ${totalTime.toFixed(2)} ms`, 'color: #00ff00; font-weight: bold; font-size: 13px;')
+        console.log('----------------------------------------')
+        console.log(`🚀 Total execution time: %c${totalTime.toFixed(2)} ms`, 'color: #ffaa00; font-weight: bold;')
     }
 
 }

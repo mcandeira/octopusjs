@@ -1,4 +1,4 @@
-import * as Marks from './OctopusMarks'
+import * as Marks from '../marks'
 
 export class OctopusMarksFactory {
 
@@ -6,6 +6,8 @@ export class OctopusMarksFactory {
 
     static createMark(start: number, end: number, content: string): Marks.OctopusMark
     {
+        if(end < start) return new Marks.OctopusMarkInvalid(start, end)
+
         const cleanContent = content.trim()
         if(!cleanContent) return new Marks.OctopusMarkInvalid(start, end)
         

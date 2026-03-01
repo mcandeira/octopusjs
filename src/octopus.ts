@@ -24,10 +24,10 @@ export class octopus {
    ===================================================================== */
 
     /**
-     * Registers a value in the Octopus Central Nervous System.
+     * Sets a value in the Octopus Central Nervous System.
      * @static
      * @param {string} name - The unique name for the value.
-     * @param {any} value - The data payload to register.
+     * @param {any} value - The data payload to set.
      * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
      * @returns {void}
      */ 
@@ -37,11 +37,11 @@ export class octopus {
     }
 
     /**
-     * Subscribes a callback to a registered value in the Octopus Central Nervous System.
+     * Receive the value setted in the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The name of the registered value.
+     * @param {string} name - The name of the setted value.
      * @param {Function} callback - The function to execute when the value is available.
-     * @param {boolean} [remember=true] - If true, the value will be deliver whenever it changes.
+     * @param {boolean} [remember=true] - If true, the value will be received whenever it changes.
      * @returns {void}
      */
     static receiveValue(name: string, callback: Function, remember: boolean = true): void
@@ -50,15 +50,15 @@ export class octopus {
     }
 
 /* =====================================================================
-    OCTOPUS PROTECTED
+    OCTOPUS PROTECTED VALUES
    ===================================================================== */
 
     /**
-     * Registers a protected value that requires a password for access.
+     * Sets a value protected by password in the Octopus Central Nervous System.
      * @static
      * @param {string} name - The unique name for the protected value.
-     * @param {any} value - The sensitive data payload to register.
-     * @param {string} password - The password required to retrieve the value.
+     * @param {any} value - The protected data payload to set.
+     * @param {string} password - The password required to access the value.
      * @returns {void}
      */
     static setProtected(name: string, value: any, password: string): void
@@ -67,12 +67,12 @@ export class octopus {
     }
 
     /**
-     * Subscribes a callback to a protected value, providing the required password.
+     * Receive the protected value setted in the Octopus Central Nervous System.
      * @static
      * @param {string} name - The name of the protected value.
-     * @param {string} password - The password required to unlock the value.
+     * @param {string} password - The password required to access the value.
      * @param {Function} callback - The function to execute when the protected value is available.
-     * @param {boolean} [remember=true] - If true, the value will be deliver whenever it changes.
+     * @param {boolean} [remember=true] - If true, the protected value will be received whenever it changes.
      * @returns {void}
      */
     static receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
@@ -85,10 +85,10 @@ export class octopus {
    ===================================================================== */
 
     /**
-     * Registers a global helper function.
+     * Sets a helper function in the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The unique name for the helper.
-     * @param {Function} callback - The helper function to register.
+     * @param {string} name - The unique name for the setted helper.
+     * @param {Function} callback - The helper function to set.
      * @param {boolean} [override=false] - If true, overwrites an existing helper with the same name.
      * @returns {void}
      */
@@ -98,11 +98,11 @@ export class octopus {
     }
 
     /**
-     * Retrieves or subscribes to a registered helper function.
+     * Receive the helper function setted in the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The name of the registered helper.
-     * @param {Function} callback - The function that will receive the helper.
-     * @param {boolean} [remember=false] - If true, the helper will be deliver whenever it changes.
+     * @param {string} name - The name of the setted helper.
+     * @param {Function} callback - The function to execute when the helper is available.
+     * @param {boolean} [remember=false] - If true, the helper will be received whenever it changes.
      * @returns {void}
      */
     static receiveHelper(name: string, callback: Function, remember: boolean = false): void
@@ -115,10 +115,10 @@ export class octopus {
    ===================================================================== */
 
     /**
-     * Registers a global action in the Octopus Central Nervous System.
+     * Sets a action function in the Octopus Central Nervous System.
      * @static
      * @param {string} name - The unique name for the action.
-     * @param {Function} action - The action function to register.
+     * @param {Function} action - The action function to set.
      * @param {boolean} [override=false] - If true, overwrites an existing action with the same name.
      * @returns {void}
      */
@@ -128,7 +128,7 @@ export class octopus {
     }
 
     /**
-     * Triggers a registered action, optionally passing a payload.
+     * Triggers a action setted in the Octopus Central Nervous System.
      * @static
      * @param {string} name - The name of the action to trigger.
      * @param {any} [value=undefined] - The optional payload to pass to the action.

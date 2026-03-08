@@ -1,6 +1,6 @@
-import { OctopusComponent } from '../periferics/OctopusComponent'
-import { OctopusTemplates } from './OctopusTemplates'
-import { OctopusRequest } from './OctopusRequest'
+import { OctopusComponent } from '../periferics/OctopusComponent.ts'
+import { OctopusTemplates } from './OctopusTemplates.ts'
+import { OctopusRequest } from './OctopusRequest.ts'
 
 export class OctopusMind {
 

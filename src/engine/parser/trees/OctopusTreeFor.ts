@@ -1,53 +1,52 @@
-import { OctopusTree } from './OctopusTree'
-//import { OctopusUtils } from '../OctopusUtils'
+import { OctopusTree } from './OctopusTree.ts'
+import { OctopusUtils } from '../OctopusUtils.ts'
 
-//import * as Marks from '../marks/OctopusMark'
+import { OctopusMarkFor } from '../marks/OctopusMarkFamilyFOR.ts'
 
 export class OctopusTreeFor extends OctopusTree {
 
-    process(data?: Record<string,any>): string
+    process(template: string, data: Record<string,any>): string
     {
-        // const input = OctopusTree.template
-        // data = data ?? OctopusTree.data
+        if(this.isOpenTree()){
+            console.warn(OctopusUtils.constant.unclosedTree(this.root.name))
+            return template.substring(this.root.start, this.closure.end)
+        }
+
+        const forRoot = this.root as OctopusMarkFor
         
-        // const forRoot = this.root as Marks.OctopusMarkFor;
-        // const list = OctopusTreesUtils.resolveValue(forRoot.collection, data)
+        const [alias, , collectionName] = forRoot.iteration.split(' ')
 
-        // if(!Array.isArray(list)) return ''
+        const list = OctopusUtils.function.resolveValue(collectionName?.trim(), data)
+        
+        if(!Array.isArray(list)) return ''
 
-        // const chunks: string[] = []
+        const finalChunks: string[] = []
+        const children = this.children
 
-        // for (const item of list) {
-        //     const scopedData = { ...data, [forRoot.element]: item }
+        for (const item of list) {
+            
+            const scopedData = { ...data, [alias.trim()]: item }
 
-        //     let cursor = forRoot.end
-        //     for (const child of this.children) {
-        //         const isTree = child instanceof OctopusTree
-        //         const nextMark = isTree ? child.root : child
-        //         const lastMark = isTree ? child.closure : child
+            const iterationChunks = []
+            let cursor = this.root.end
 
-        //         chunks.push(input.substring(cursor, nextMark.start))
+            for (const child of children) {
+                if (child instanceof OctopusTree) {
+                    iterationChunks.push(template.substring(cursor, child.root.start))
+                    iterationChunks.push(child.process(template, scopedData))
+                    cursor = child.closure.end
+                } else {
+                    iterationChunks.push(template.substring(cursor, child.start))
+                    cursor = child.end
+                }
+            }
 
+            iterationChunks.push(template.substring(cursor, this.closure.start))
 
-        //         if (isTree) {
-        //             chunks.push(child.process(scopedData))
-        //         }
-                
-        //         cursor = lastMark.end
-        //     }
+            finalChunks.push(OctopusUtils.function.interpolate(iterationChunks.join(''), scopedData))
+        }
 
-        //     const finalChunk = input.substring(cursor, this.closure.start)
-        //     chunks.push(this.replaceVars(finalChunk, scopedData))
-        // }
-
-        // return chunks.join('')
-        return ''
+        return finalChunks.join('')
     }
 
-    // private replaceVars(html: string, data: Record<string, any>): string {
-    //     return html.replace(OctopusTreesUtils.REGEX_VARS, ([], key) => {
-    //         const value = OctopusTreesUtils.resolveValue(key.trim(), data);
-    //         return value !== undefined ? OctopusTreesUtils.escapeHTML(String(value)) : '';
-    //     });
-    // }
 }

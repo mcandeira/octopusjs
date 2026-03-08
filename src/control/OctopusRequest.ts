@@ -1,5 +1,5 @@
-import { OctopusAutoProcess } from './OctopusAutoProcess'
-import { OctopusUtils } from './OctopusUtils'
+import { OctopusAutoProcess } from './OctopusAutoProcess.ts'
+import { OctopusUtils } from './OctopusUtils.ts'
 
 export class OctopusRequest {
 

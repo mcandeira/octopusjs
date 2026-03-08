@@ -1,5 +1,5 @@
-import { OctopusMark } from './OctopusMark'
-import { MarkType } from '../OctopusUtils'
+import { OctopusMark } from './OctopusMark.ts'
+import { MarkType } from '../OctopusUtils.ts'
 
 export class OctopusMarkRoot extends OctopusMark {
 

@@ -2,50 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanilla JS Benchmark</title>
+    <title>Standard Vanilla Benchmark (Krause-style)</title>
+    <style>
+        .row { display: flex; padding: 5px; border-bottom: 1px solid #ccc; }
+        .col-id { width: 50px; }
+        .col-label { flex-grow: 1; }
+    </style>
 </head>
 <body>
     <div id="app">
-        <h1>Vanilla JS Benchmark</h1>
+        <h1>Vanilla JS - 1,000 Rows Benchmark</h1>
+        <button id="run">Run Benchmark</button>
+        <div id="tbody"></div>
     </div>
 
     <script>
-        const data = {
-            name: 'Gemini User',
-            active: true,
-            items: Array.from({length: 1000}, (_, i) => `Producto ${i}`)
-        };
+        // 1. Preparar la plantilla
+        const template = document.createElement('template');
+        template.innerHTML = `
+            <div class="row">
+                <div class="col-id"></div>
+                <div class="col-label"></div>
+            </div>`;
 
-        const start = performance.now();
-
-        // Lógica nativa pura (la más rápida: concatenación de strings)
-        let html = `<div>
-            <h1>${data.name}</h1>
-            ${data.active ? '<p>Estado: Online</p>' : ''}
-            <ul>`;
-        
-        for (let i = 0; i < data.items.length; i++) {
-            html += `<li>Item: ${data.items[i]}</li>`;
+        function buildData(count) {
+            const adjectives = ["Pretty", "Large", "Big", "Small", "Tall"];
+            const colors = ["Red", "Yellow", "Blue", "Green", "Pink"];
+            const nouns = ["Table", "Chair", "House", "Car", "Tree"];
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push({
+                    id: i + 1,
+                    label: `${adjectives[i % 5]} ${colors[i % 5]} ${nouns[i % 5]}`
+                });
+            }
+            return data;
         }
-        
-        html += `</ul></div>`;
 
-        // Inserción en el DOM
-        document.getElementById('app').innerHTML += html;
+        document.getElementById('run').addEventListener('click', () => {
+            const data = buildData(1000);
+            const container = document.getElementById('tbody');
+            container.innerHTML = ''; // Limpiar previo
 
-        // Medición del ciclo completo (Render + Paint)
-        requestAnimationFrame(() => {
-            setTimeout(() => {
-                const end = performance.now();
-                const total = (end - start).toFixed(4);
-                console.log(`⚡ Vanilla JS Render Time: ${total}ms`);
+            const start = performance.now();
 
-                const marker = document.createElement('div');
-                marker.style = "padding:10px; background:gold; font-weight:bold; position:fixed; top:0; width:100%;";
-                marker.innerText = `Vanilla Time: ${total}ms`;
-                document.body.prepend(marker);
-            }, 0);
+            // 2. Ejecución pura de Vanilla JS
+            const fragment = document.createDocumentFragment();
+            
+            for (let i = 0; i < data.length; i++) {
+                const clone = template.content.cloneNode(true);
+                const item = data[i];
+                
+                // Asignación directa con textContent (Ultra rápido y seguro)
+                clone.querySelector('.col-id').textContent = item.id;
+                clone.querySelector('.col-label').textContent = item.label;
+                
+                fragment.appendChild(clone);
+            }
+            
+            container.appendChild(fragment);
+
+            // 3. Medición del Render + Paint
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    const end = performance.now();
+                    const total = (end - start).toFixed(2);
+                    
+                    const marker = document.createElement('div');
+                    marker.style = "padding:10px; background:gold; font-weight:bold; margin-top:10px;";
+                    marker.innerText = `Vanilla Create 1,000 rows: ${total}ms`;
+                    document.getElementById('app').prepend(marker);
+                }, 0);
+            });
         });
     </script>
 </body>

@@ -15,9 +15,9 @@ export class OctopusTemplates {
             <template id="octopusDialogTemplate">
                 <dialog id="{{ id }}" class="{{ classes }}">
                     <div>
-                        {{ message }}
+                        {{raw message }}
                         8{for option in options}
-                            {{ option }}
+                            {{raw option }}
                         8{endfor}
                         <button>Close</button>
                     </div>

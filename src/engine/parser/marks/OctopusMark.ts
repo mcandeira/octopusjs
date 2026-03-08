@@ -1,4 +1,4 @@
-import { MarkType } from '../OctopusUtils'
+import { MarkType } from '../OctopusUtils.ts'
 
 export abstract class OctopusMark {
 

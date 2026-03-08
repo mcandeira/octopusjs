@@ -13,7 +13,7 @@ const banner = `/**
  * @see {@link ${pkg.repository.url.replace('git+', '').replace('.git', '')}}
  * @release ${pkg.collaboration}
  * * Characteristics:
- * - 17kB footprint (~5.3kB Gzipped)
+ * - 20kB footprint (~6.4kB Gzipped)
  * - 0.07s LCP | 0.02s CLS
  * - Native ESM Architecture
  * * Copyright (c) ${year} ${pkg.author}

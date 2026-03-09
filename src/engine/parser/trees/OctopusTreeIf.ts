@@ -1,74 +1,48 @@
-import { OctopusTree } from './OctopusTree'
-//import { OctopusUtils } from '../OctopusUtils'
+import { OctopusTree } from './OctopusTree.ts'
+import { OctopusUtils } from '../OctopusUtils.ts'
 
-//import * as Marks from '../marks'
+import { OctopusMarkIF, OctopusMarkElse } from '../marks/OctopusMarkFamilyIF.ts'
 
 export class OctopusTreeIf extends OctopusTree {
 
-    process(data?: Record<string,any>): string
+    process(template: string, data: Record<string,any>): string
     {
-        // const template = OctopusTree.template
-        // data = OctopusTree.data
+        if(this.isOpenTree()){
+            console.warn(OctopusUtils.constant.unclosedTree(this.root.name))
+            return template.substring(this.root.start, this.closure.end)
+        }
 
-        // const root = this.root as Marks.OctopusMarkIf
-        // const closure = this.closure
+        const children = [this.root, ...this.children, this.closure]
 
-        // if(root === closure) return ''
+        const chunks = []
+        let match = false
+        let cursor = 0
 
-        // const children = this.children
+        for(const child of children){
 
-        // const rootSource =  {mark: root as Marks.OctopusMark, childPosition: -1}
-        // const closureSource = {mark: closure, childPosition: children.length -1}
+            if(child instanceof OctopusMarkIF){
 
-        // let startMark = rootSource
-        // let endMark = closureSource
+                if(match){chunks.push(template.substring(cursor, child.start)); break}
 
-        // const conditions = this.conditions
-        // const conditionsLength = conditions.length
+                match = child instanceof OctopusMarkElse ? true : OctopusUtils.function.evaluateCondition(child.condition, data)
 
-        // let condition = false
+                if(match) cursor = child.end 
 
-        // for(let i = 0; i < conditionsLength; i++){
-        //     const currentCondition = conditions[i]
-        //     const nextCondition = i < conditionsLength - 1 ? conditions[i+1] : null
+                continue 
+            }
 
-        //     startMark = currentCondition.source
-        //     endMark = nextCondition?.source ?? closureSource
+            if(!match) continue
 
-        //     const pathCondition = currentCondition.path
-        //     const resolved = pathCondition !== 'else' ? OctopusTreesUtils.resolveValue(pathCondition, data) : true
-        //     if(resolved){condition = true; break}
-        // }
-
-        // if(!condition) return ''
-
-        // const chunks = []
-        // const from = startMark.childPosition + 1
-        // const until = endMark.childPosition
-        
-        // let cursor = 0
-        // for(let i = from; i < until; i++){
-
-        //     const child = children[i]
-        //     if(child instanceof OctopusTree){
-        //         chunks.push(template.substring(cursor, child.root.start))
-        //         chunks.push(child.process())
-        //         cursor = child.closure.end
-        //     } else {
-        //         chunks.push(template.substring(cursor, child.start))
-        //         cursor = child.end
-        //     }
-
-        // }
-        // chunks.push(template.substring(cursor, endMark.mark.start))
-
-        // const result = chunks.join('').replace(OctopusTreesUtils.REGEX_VARS, ([], key) => {
-        //     const value = OctopusTreesUtils.resolveValue(key.trim(), data)
-        //     return value !== undefined ? OctopusTreesUtils.escapeHTML(String(value)) : ''
-        // })
-
-        // return result
-        return ''
+            if(child instanceof OctopusTree){
+                chunks.push(template.substring(cursor, child.root.start))
+                chunks.push(child.process(template, data))
+                cursor = child.closure.end
+            } else {
+                chunks.push(template.substring(cursor, child.start))
+                cursor = child.end
+            }
+        }
+        return OctopusUtils.function.interpolate(chunks.join(''), data)
     }
 
 }

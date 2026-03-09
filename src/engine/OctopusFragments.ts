@@ -1,4 +1,4 @@
-import { OctopusCache } from './OctopusCache'
+import { OctopusCache } from './OctopusCache.ts'
 
 export class OctopusFragments {
 
@@ -6,11 +6,10 @@ export class OctopusFragments {
 
     static stringToFragment(string: string): DocumentFragment
     {
-        const fragment = this.cache.process(string, (string: string): DocumentFragment => OctopusFragments.generateFragment(string))
-        return fragment.cloneNode(true)
+        return this.cache.process(string, (string: string): DocumentFragment => OctopusFragments.buildFragment(string))
     }
 
-    static generateFragment(string: string): DocumentFragment
+    private static buildFragment(string: string): DocumentFragment
     {
         const template = document.createElement('template')
         template.innerHTML = string
@@ -18,7 +17,7 @@ export class OctopusFragments {
         return template.content
     }
 
-    static fixScripts(fragment: DocumentFragment)
+    private static fixScripts(fragment: DocumentFragment)
     {
         for(const element of fragment.querySelectorAll('template, script')){
             if(element instanceof HTMLTemplateElement) this.fixScripts(element.content)

@@ -1,18 +1,16 @@
-import { OctopusMark } from './OctopusMark'
-import { MarkType } from '../OctopusUtils'
+import { OctopusMark } from './OctopusMark.ts'
+import { MarkType } from '../OctopusUtils.ts'
 
 export abstract class OctopusMarkFOR extends OctopusMark{}
 
 export class OctopusMarkFor extends OctopusMarkFOR {
 
-    element: string
-    collection: string
+    iteration: string
 
-    constructor(start: number, end: number, name: string, element: string, collection: string)
+    constructor(start: number, end: number, name: string, iteration: string)
     {
         super(start, end, name, MarkType.open)
-        this.element = element
-        this.collection = collection
+        this.iteration = iteration
     }
     
 }

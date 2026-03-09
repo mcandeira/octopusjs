@@ -2,59 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OctopusJS Benchmark</title>
+    <title>OctopusJS - 1,000 Rows Benchmark</title>
+    <style>
+        .row { display: flex; padding: 5px; border-bottom: 1px solid #ccc; }
+        .col-id { width: 50px; }
+        .col-label { flex-grow: 1; }
+    </style>
 </head>
 <body>
-    <div>
-        <h1>OctopusJS Benchmark</h1>
+    <div id="app">
+        <h1>OctopusJS - 1,000 Rows Benchmark</h1>
+        <button id="run">Run Benchmark</button>
+        <div id="tbody"></div>
 
         <template>
-            <div>
-                <h1>{{ name }}</h1>
-                8{if active}
-                    <p>Estado: Online</p>
-                8{endif}
-                <ul>
-                    8{for item in items}
-                        <li>Item: {{ item }}</li>
-                    8{endfor}
-                </ul>
-            </div>
+            8{for item in items}
+                <div class="row">
+                    <div class="col-id">{{ item.id }}</div>
+                    <div class="col-label">{{ item.label }}</div>
+                </div>
+            8{endfor}
         </template>
 
         <script type="module" class="octopus">
-            import { octopus } from '../../dist/octopus.min.js'
+            import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js';
 
-            const component = octopus.getComponent(this)
-            const template = component.getChild('template')
+            const component = octopus.getComponent(this);
+            const template = component.getChild('template');
+            const container = component.getChild('#tbody');
+            const btn = component.getChild('#run');
 
-            const data = {
-                name: 'Gemini User',
-                active: true,
-                items: Array.from({length:1000}, (_, i) => `Producto ${i}`)
-            }
-
-            const start = performance.now()
-            component.render([template, data])
-            requestAnimationFrame(() => {
-                setTimeout(()=>{
-                    const end = performance.now()
-                    const total = (end -start).toFixed(4)
-                    console.log(`🚀 OctopusJS Render Time: ${total}ms`)
-
-                    octopus.getComponent('body').render(`<div style="padding:10px; background:lawngreen; font-weight:bold">Time: ${total}ms</div>`, 'beforebegin')
-                }, 0)
-            })
-        </script>
-
-        <style>
-            @scope{
-                > h1{
-                    background-color: darkorchid;
+            function buildData(count) {
+                const adjectives = ["Pretty", "Large", "Big", "Small", "Tall"];
+                const colors = ["Red", "Yellow", "Blue", "Green", "Pink"];
+                const nouns = ["Table", "Chair", "House", "Car", "Tree"];
+                const data = [];
+                for (let i = 0; i < count; i++) {
+                    data.push({
+                        id: i + 1,
+                        label: `${adjectives[i % 5]} ${colors[i % 5]} ${nouns[i % 5]}`
+                    });
                 }
+                return data;
             }
-        </style>
+
+            btn.use('addEventListener', 'click', () => {
+                const items = buildData(1000);
+                container.set('innerHTML', ''); // Limpiar el contenedor previo
+
+                const start = performance.now();
+
+                // 3. Ejecución pura de OctopusJS
+                component.render([template, { items }], 'into', container);
+
+                // 4. Medición del Render + Paint
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        const end = performance.now();
+                        const total = (end - start).toFixed(2);
+                        
+                        const marker = document.createElement('div');
+                        marker.style = "padding:10px; background:darkorchid; color:white; font-weight:bold; margin-top:10px;";
+                        marker.innerText = `Octopus Create 1,000 rows: ${total}ms`;
+                        document.getElementById('app').prepend(marker);
+                    }, 0);
+                });
+            });
+        </script>
     </div>
 </body>
 </html>

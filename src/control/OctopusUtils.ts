@@ -1,4 +1,4 @@
-import { OctopusComponent } from '../periferics/OctopusComponent'
+import { OctopusComponent } from '../periferics/OctopusComponent.ts'
 
 export const OctopusUtils = {
 

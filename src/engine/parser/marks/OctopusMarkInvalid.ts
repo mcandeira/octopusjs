@@ -1,10 +1,10 @@
-import { OctopusMark } from './OctopusMark'
-import { MarkType } from '../OctopusUtils'
+import { OctopusMark } from './OctopusMark.ts'
+import { MarkType } from '../OctopusUtils.ts'
 
 export class OctopusMarkInvalid extends OctopusMark {
 
-    constructor(start: number, end: number){
-        super(start, end, 'invalid', MarkType.special)
+    constructor(start: number, end: number, content: string){
+        super(start, end, `8{${content}}`, MarkType.special)
     }
 
 }

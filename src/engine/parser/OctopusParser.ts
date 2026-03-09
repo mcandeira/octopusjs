@@ -1,22 +1,27 @@
-import { OctopusTree, OctopusTreeRoot } from './trees'
-import { OctopusUtils } from './OctopusUtils'
-import { OctopusMarksFactory as MarksFactory} from './factories/OctopusMarksFactory'
-import { OctopusMarkInvalid } from './marks'
+import { OctopusCache } from '../OctopusCache.ts'
+import { OctopusTree } from './trees/OctopusTree.ts'
+import { OctopusUtils, MarkType } from './OctopusUtils.ts'
+import { OctopusTreeAssembler } from './trees/OctopusTreeAssembler.ts'
+import { OctopusMarksFactory as MarksFactory} from './factories/OctopusMarksFactory.ts'
 
 export class OctopusParser {
 
-    static generateOctopusTree(template: string, data: Record<string,any>): OctopusTree
-    {
-        OctopusTree.template = template
-        OctopusTree.data = data
+    static readonly cache: OctopusCache = new OctopusCache()
 
+    static generateOctopusTree(template: string): OctopusTree
+    {
+        return this.cache.process(template, (template: string): OctopusTree => this.buildTree(template))
+    }
+
+    private static buildTree(template: string): OctopusTree
+    {
         const startDelimiter = OctopusUtils.constant.startDelimiter
         const startDelimiterLength = startDelimiter.length
 
         const endDelimiter = OctopusUtils.constant.endDelimiter
         const endDelimiterLength = endDelimiter.length
 
-        const octopusRootTree = new OctopusTreeRoot()
+        const treeAssembler = new OctopusTreeAssembler()
 
         let cursor = 0
         while(true)
@@ -25,18 +30,20 @@ export class OctopusParser {
             if(starting < 0) break
 
             const ending = cursor = template.indexOf(endDelimiter, starting)
+            if(ending < 1){console.warn(OctopusUtils.constant.lastUnclosedMark()); break}
 
             const mark = MarksFactory.createMark(starting, ending + endDelimiterLength, template.substring(starting + startDelimiterLength, ending))
 
-            if(mark instanceof OctopusMarkInvalid){
-                console.warn(OctopusUtils.constant.unknownMark(mark.constructor.name))
-                continue
+            switch(mark.type)
+            {
+                case MarkType.open: treeAssembler.openTree(mark); break
+
+                case MarkType.close: treeAssembler.closeTree(mark); break
+                    
+                default: treeAssembler.addMark(mark)
             }
-
-            octopusRootTree.addChild(mark)
         }
-
-        return octopusRootTree
+        return treeAssembler.getTree()
     }
 
 }

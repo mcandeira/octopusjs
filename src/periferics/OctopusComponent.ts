@@ -1,6 +1,6 @@
-import { Selector, OctopusUtils, Input, Position } from './OctopusUtils'
-import { OctopusNervousSystem } from './OctopusNervousSystem'
-import { OctopusEngine } from '../engine/OctopusOldEngine'
+import { Selector, OctopusUtils, Input, Position } from './OctopusUtils.ts'
+import { OctopusNervousSystem } from './nervous/OctopusNervousSystem.ts'
+import { OctopusEngine } from '../engine/OctopusEngine.ts'
 
 const octopusScripts = Array.from(document.querySelectorAll('script.octopus')).reverse()
 
@@ -134,100 +134,93 @@ export class OctopusComponent {
    ===================================================================== */
 
     /**
-     * Sets a value in the Octopus Central Nervous System.
-     * @param {string} name - The unique name for the value.
-     * @param {any} value - The data payload to set.
-     * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
+     * Sends a value to the Octopus Central Nervous System.
+     * @param {string} name - The name of the value.
+     * @param {any} [value=undefined] - The optional data payload to send.
+     * @param {string|undefined} [password=undefined] - Prevents write access to the value by password.
+     * @param {boolean} [accessible=true] - If true, allows public read access. If false, prevents public read access by password.
      * @returns {void}
-     */ 
-    setValue(name: string, value: any, override: boolean = false): void
+     */
+    sendValue(name: string, value: any = undefined, password: string|undefined = undefined, accessible: boolean = true): void
     {
-        OctopusNervousSystem.setValue(name, value, override)
+        OctopusNervousSystem.sendValue(name, value, password, accessible)
     }
 
     /**
-     * Receive the value setted in the Octopus Central Nervous System.
-     * @param {string} name - The name of the setted value.
-     * @param {Function} callback - The function to execute when the value is available.
-     * @param {boolean} [remember=true] - If true, the value will be received whenever it changes.
+     * Receives the value sent to the Octopus Central Nervous System.
+     * @param {string} name - The name of the sent value.
+     * @param {Function} callback - The function to execute.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if the value was not yet sent (undefined).
+     * - If false: The execution always waits to the next sent value.
+     * - If undefined: Executes as soon as the value is available.
+     * @param {boolean} [once=false] - If true, the receiver will execute only once. If false, the receiver will execute whenever the value changes.
+     * @param {string|undefined} [password=undefined] - Allows receiving private values protected by password.
      * @returns {void}
      */
-    receiveValue(name: string, callback: Function, remember: boolean = true): void
+    receiveValue(name: string, callback: Function, immediate: boolean|undefined = undefined, once: boolean = false, password: string|undefined = undefined): void
     {
-        OctopusNervousSystem.receiveValue(name, callback, remember)
-    }
-
-     /**
-     * Sets a value protected by password in the Octopus Central Nervous System.
-     * @param {string} name - The unique name for the protected value.
-     * @param {any} value - The protected data payload to set.
-     * @param {string} password - The password required to access the value.
-     * @returns {void}
-     */
-    setProtected(name: string, value: any, password: string): void
-    {
-        OctopusNervousSystem.setProtected(name, value, password)
+        OctopusNervousSystem.receiveValue(name, callback, immediate, once, password)
     }
 
     /**
-     * Receive the protected value setted in the Octopus Central Nervous System.
-     * @param {string} name - The name of the protected value.
-     * @param {string} password - The password required to access the value.
-     * @param {Function} callback - The function to execute when the protected value is available.
-     * @param {boolean} [remember=true] - If true, the protected value will be received whenever it changes.
+     * Sends a helper function to the Octopus Central Nervous System.
+     * @param {string} name - The name of the helper.
+     * @param {Function} helper - The helper function to send.
+     * @param {string|undefined} [password=undefined] - Prevents write access to the helper by password.
+     * @param {boolean} [accessible=true] - If true, allows public read access. If false, prevents public read access by password.
      * @returns {void}
      */
-    receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
+    sendHelper(name: string, helper: Function, password: string|undefined = undefined, accessible: boolean = true): void
     {
-        OctopusNervousSystem.receiveProtected(name, password, callback, remember)
+        OctopusNervousSystem.sendHelper(name, helper, password, accessible)
     }
 
     /**
-     * Sets a helper function in the Octopus Central Nervous System.
-     * @param {string} name - The unique name for the setted helper.
-     * @param {Function} callback - The helper function to set.
-     * @param {boolean} [override=false] - If true, overwrites an existing helper with the same name.
+     * Receives the helper function sent to the Octopus Central Nervous System.
+     * @param {string} name - The name of the sent helper.
+     * @param {Function} callback - The function to execute.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if the helper was not yet sent (undefined).
+     * - If false: The execution always waits to the next sent helper.
+     * - If undefined: Executes as soon as the helper is available.
+     * @param {boolean} [once=true] - If true, the receiver will execute only once. If false, the receiver will execute whenever the helper changes.
+     * @param {string|undefined} [password=undefined] - Allows receiving private values protected by password.
      * @returns {void}
      */
-    setHelper(name: string, callback: Function, override: boolean = false): void
+    receiveHelper(name: string, callback: Function, immediate: boolean|undefined = undefined, once: boolean = true, password: string|undefined = undefined): void
     {
-        OctopusNervousSystem.setHelper(name, callback, override)
+        OctopusNervousSystem.receiveHelper(name, callback, immediate, once, password)
     }
 
     /**
-     * Receive the helper function setted in the Octopus Central Nervous System.
-     * @param {string} name - The name of the setted helper.
-     * @param {Function} callback - The function to execute when the helper is available.
-     * @param {boolean} [remember=false] - If true, the helper will be received whenever it changes.
-     * @returns {void}
-     */
-    receiveHelper(name: string, callback: Function, remember: boolean = false): void
-    {
-        OctopusNervousSystem.receiveHelper(name, callback, remember)
-    }
-
-    /**
-     * Sets a action function in the Octopus Central Nervous System.
-     * @param {string} name - The unique name for the action.
+     * Sets an action in the Octopus Central Nervous System.
+     * @param {string} name - The name of the action to set.
      * @param {Function} action - The action function to set.
-     * @param {boolean} [override=false] - If true, overwrites an existing action with the same name.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if a trigger was not yet sent (undefined).
+     * - If false: The execution always waits to the next trigger.
+     * - If undefined: Executes as soon as a trigger is available.
+     * @param {boolean} [once=false] - If true, the action will execute only once. If false, the action will execute whenever it is triggered.
+     * @param {string|undefined} [password=undefined] - Allows reacting to private triggers protected by password.
      * @returns {void}
      */
-    setAction(name: string, action: Function, override: boolean = false): void
+    setAction(name: string, action: Function, immediate: boolean|undefined = undefined, once: boolean = false, password: string|undefined = undefined): void
     {
-        OctopusNervousSystem.setAction(name, action, override)
+        OctopusNervousSystem.setAction(name, action, immediate, once, password)
     }
 
     /**
-     * Triggers a action setted in the Octopus Central Nervous System.
+     * Triggers an action set in the Octopus Central Nervous System.
      * @param {string} name - The name of the action to trigger.
-     * @param {any} [value=undefined] - The optional payload to pass to the action.
-     * @param {boolean} [remember=false] - If true, the action will trigger whenever it changes.
+     * @param {any} [value=undefined] - The optional data payload to pass to the action.
+     * @param {string|undefined} [password=undefined] - Prevents write access to the value by password.
+     * @param {boolean} [accessible=true] - If true, allows public read access. If false, prevents public read access by password.
      * @returns {void}
      */
-    triggerAction(name: string, value: any = undefined, remember: boolean = false): void
+    triggerAction(name: string, value: any = undefined, password: string|undefined = undefined, accessible: boolean = true): void
     {
-        OctopusNervousSystem.triggerAction(name, value, remember)
+        OctopusNervousSystem.triggerAction(name, value, password, accessible)
     }
 
 /* =====================================================================
@@ -235,51 +228,57 @@ export class OctopusComponent {
    ===================================================================== */
 
     /**
-     * Sets a prop to descendants scoped to this component.
+     * Sends a prop to descendants scoped to this component.
+     * @param {string} name - The name for the prop.
+     * @param {any} [value=undefined] - The optional data payload to send.
+     * @returns {void}
+     */
+    sendProp(name: string, value: any = undefined): void
+    {
+        OctopusNervousSystem.sendProp(this._ref, name, value)
+    }
+
+    /**
+     * Receives a prop scoped to this component.
      * @param {string} name - The name of the prop.
-     * @param {any} value - The payload of the prop.
-     * @param {boolean} [override=false] - If true, overwrites an existing prop with the same name.
+     * @param {Function} callback - The function to execute.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if the prop was not yet sent (undefined).
+     * - If false: The execution always waits to the next sent prop.
+     * - If undefined: Executes as soon as the prop is available.
+     * @param {boolean} [once=false] - If true, the receiver will execute only once. If false, the receiver will execute whenever the prop changes.
      * @returns {void}
      */
-    setProp(name: string, value: any, override: boolean = false): void
+    receiveProp(name: string, callback: Function, immediate: boolean|undefined = undefined, once: boolean = false): void
     {
-        OctopusNervousSystem.setProp(this._ref, name, value, override)
+        OctopusNervousSystem.receiveProp(this._ref, name, callback, immediate, once)
     }
 
     /**
-     * Receive a prop scoped to this component.
-     * @param {string} name - The name of the prop.
-     * @param {Function} callback - The function to execute when the prop is available.
-     * @param {boolean} [remember=true] - If true, the prop will be receive whenever it changes.
+     * Sends a value/signal to the parent component.
+     * @param {string} name - The name of the value/signal to send.
+     * @param {any} [value=undefined] - The optional data payload to send.
      * @returns {void}
      */
-    receiveProp(name: string, callback: Function, remember: boolean = true): void
+    sendParent(name: string, value: any = undefined): void
     {
-        OctopusNervousSystem.receiveProp(this._ref, name, callback, remember)
+        OctopusNervousSystem.sendParent(this._ref, name, value)
     }
 
     /**
-     * Set a child listener scoped to this component.
-     * @param {string} name - The name of the child emitted event/data.
-     * @param {Function} callback - The function to execute when received.
-     * @param {boolean} [override=false] - If true, overwrites an existing child listener.
+     * Receives a value/signal sent by a child component.
+     * @param {string} name - The name of the value/signal sent.
+     * @param {Function} callback - The function to execute.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if the child was not yet sent anything (undefined).
+     * - If false: The execution always waits to the next child value/signal.
+     * - If undefined: Executes as soon as the value/signal is available.
+     * @param {boolean} [once=false] - If true, the receiver will execute only once. If false, the receiver will execute whenever the value/signal is sent.
      * @returns {void}
      */
-    setChildListener(name: string, callback: Function, override: boolean = false): void
+    receiveChild(name: string, callback: Function, immediate: boolean|undefined = undefined, once: boolean = false): void
     {
-        OctopusNervousSystem.setChildListener(this._ref, name, callback, override)
-    }
-
-    /**
-     * Emits an event or data upwards to parent component.
-     * @param {string} name - The name of the data emitted.
-     * @param {any} value - The payload to send upwards.
-     * @param {boolean} [remember=true] - If true, the parent listener will be executed whenever it changes.
-     * @returns {void}
-     */
-    receiveChildListener(name: string, value: any, remember: boolean = false): void
-    {
-        OctopusNervousSystem.receiveChildListener(this._ref, name, value, remember)
+        OctopusNervousSystem.receiveChild(this._ref, name, callback, immediate, once)
     }
 
 /* =====================================================================
@@ -290,13 +289,13 @@ export class OctopusComponent {
      * Renders content in the DOM.
      * @param {Input} input - Template (OctopusComponent, Element or string) or Array [Template, data] to process.
      * @param {Position} [position='default'] - Relative position where to insert the result.
-     * @param {OctopusComponent|Element} [relativeElement] - Relative element to insert the result.
+     * @param {OctopusComponent|Element} [relative] - Relative element to insert the result.
      * @returns {void}
      * @throws {TypeError}
      */
-    render(input: Input, position: Position = 'default', relativeElement: OctopusComponent|Element = this._ref): void
+    render(input: Input, position: Position = 'default', relative: OctopusComponent|Element = this._ref): void
     {
-        OctopusEngine.render(input, position, relativeElement instanceof OctopusComponent ? relativeElement._ref : relativeElement)
+        OctopusEngine.render(input, position, relative)
     }
 
 }

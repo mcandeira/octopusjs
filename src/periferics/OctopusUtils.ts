@@ -1,4 +1,4 @@
-import { OctopusComponent } from './OctopusComponent'
+import { OctopusComponent } from './OctopusComponent.ts'
 
 export type Selector = string|Element|undefined
 
@@ -16,14 +16,12 @@ export const OctopusUtils = {
         methodNotExist: (method: string): string => OctopusUtils.error(`The "${method}" HTMLElement method does not exist.`),
         notHimself: () => OctopusUtils.error(`The "into" option requires a relative element different from himself.`),
 
-        unOverriddenValue: (value: string): string => OctopusUtils.error(`The "${value}" value cannot be overridden.`),
-        unOverriddenHelper: (helper: string): string => OctopusUtils.error(`The "${helper}" helper cannot be overridden.`),
-        unOverriddenAction: (action: string): string => OctopusUtils.error(`The ${action} action cannot be overridden.`),
-        unOverriddenProp: (prop: string): string => OctopusUtils.error(`The ${prop} prop cannot be overridden.`),
-        unOverriddenListener: (listener: string): string => OctopusUtils.error(`The "${listener}" child listener cannot be overridden.`),
+        protectedValue: (value: string): string => OctopusUtils.error(`The "${value}" value is protected by password.`),
+        protectedHelper: (helper: string): string => OctopusUtils.error(`The "${helper}" helper is protected by password.`),
+        protectedAction: (action: string): string => OctopusUtils.error(`The "${action}" action is protected by password.`),
 
-        parentPropNotFound: (prop: string): string => OctopusUtils.error(`Prop "${prop}" parent not found.`),
-        parentListenerNotFound: (listener: string): string => OctopusUtils.error(`Listener "${listener}" parent not found.`),
+        parentPropNotFound: (prop: string): string => OctopusUtils.error(`Parent not found for prop "${prop}".`),
+        parentSendNotFound: (send: string): string => OctopusUtils.error(`Parent not found for send "${send}".`),
 
         invalidValidateArguments: (method: string, position: number): string => 
         {

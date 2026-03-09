@@ -3,8 +3,8 @@
 Develop smart frontend components with the raw power of native HTML, CSS and JavaScript using this high-performance distributed intelligence framework.
 
 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-    <img src="https://img.shields.io/badge/Performance-~11ms%20(1k%20items)-seagreen?style=for-the-badge" alt="Performance">
-    <img src="https://img.shields.io/badge/Size-5.3kB%20Gzipped-007ec6?style=for-the-badge" alt="Size">
+    <img src="https://img.shields.io/badge/Performance-~12ms%20(1k%20items)-seagreen?style=for-the-badge" alt="Performance">
+    <img src="https://img.shields.io/badge/Size-6.4kB%20Gzipped-007ec6?style=for-the-badge" alt="Size">
     <img src="https://img.shields.io/badge/Logic-Distributed%20Intelligence-darkorchid?style=for-the-badge" alt="Logic">
     <img src="https://img.shields.io/badge/Dependencies-0-fe7d37?style=for-the-badge" alt="Dependencies">
     <img src="https://img.shields.io/npm/v/octopus-js-native?style=for-the-badge&color=critical" alt="NPM Version">
@@ -12,7 +12,7 @@ Develop smart frontend components with the raw power of native HTML, CSS and Jav
 
 <hr>
 
-Render 1,000 reactive components in **~11ms** (logic execution) using only native web standards.
+Render 1,000 reactive components in **~12ms** (logic execution) using only native web standards.
 
 ![OctopusJS Performance Demo](./assets/demo.gif)
 
@@ -35,41 +35,44 @@ Render 1,000 reactive components in **~11ms** (logic execution) using only nativ
 
 [<h2 id="what-it-is">What It Is</h2>](#what-it-is)
 
-OctopusJS is a high-performance, distributed intelligence frontend development framework designed for web developers who demand an intuitive DX (Developer Experience) alongside "science-fiction" execution speeds.
+OctopusJS is a high-performance, distributed intelligence frontend development framework designed for web developers who demand an intuitive and blazing-fast DX (Developer Experience) alongside "science-fiction" execution speeds.
 
 Unlike traditional frameworks, OctopusJS **does not alter** the underlying behavior of web technologies. Instead, it leverages them directly, ensuring full compatibility with all native features. This allows developers to easily build sophisticated components without sacrificing the freedom and raw power of native HTML, CSS, and JavaScript.
 
 To achieve this, OctopusJS distributes its logic across **Octopus Components**. These components represent a new paradigm in web development, allowing you to manage encapsulated logic, styles, and templates using pure web standards.
+
 
 [Table of Contents](#table)
 
 
 [<h2 id="advantages">Advantages</h2>](#advantages)
 
-+ **As fast as Vanilla:** Octopus Components run directly on the browser without abstractions so the overhead is literally cero.
++ 🏎️ **As fast as Vanilla:** Octopus Components run directly on the browser without abstractions so the overhead is literally zero.
 
-+ **Featherweight:** At 5.3kB Gzipped, it flies on any device and keeps the memory footprint at an absolute minimum.
++ 🪶 **Featherweight:** At 6.4kB Gzipped, it flies on any device and keeps the memory footprint at an absolute minimum.
 
-+ **True Encapsulation:** Build truly independent components with scoped logic and styles without the complexity of Shadow DOM if you don't need it.
++ 🌐 **Pure HTML Components:** Build encapsulated components with scoped logic and styles directly inside HTML. If you know HTML, CSS and JavaScript, you already know OctopusJS.
 
-+ **Raw Power:** You have direct access to the full potential of the web platform. No abstractions to limit your creativity or performance.
++ 🚀 **Raw Power:** You have direct access to the full potential of the web platform. No abstractions to limit your creativity or performance.
 
-+ **Developer Friendly:** Incredibly easy to pick up and lightning-fast to master.
++ 🔌 **Ready to Use:** Incredibly easy to pick up and lightning-fast to master.
 
-+ **Ecosystem Ready:** Fully compatible with any other frontend library or backend framework. It plays well with others.
++ 🛡️ **Strong Architecture:** Designed from the ground up to be highly fault-tolerant and secure.
+
++ 🛠️ **Ecosystem Ready:** Fully compatible with any other frontend library or backend framework. Keep your views in your server and let OctopusJS handle the client-side reactivity without friction.
 
 [Table of Contents](#table)
 
 
 [<h2 id="quick">🚀 Quick Start (in 60 seconds)</h2>](#quick)
 
-Test this quick example in less than 60 seconds:
+Experience the zero-build philosophy in less than 60 seconds:
 
-+ **Prepare your environment:** Open `VS Code` and install the `Live Preview` extension.
+1. **Prepare your environment:** Open `VS Code` and install the `Live Preview` extension.
 
-+ **Create the file:** Create a new `component.html` file.
+2. **Create the file:** Create a new `component.html` file.
 
-+ **Paste the code:** Copy and paste the following snippet:
+3. **Paste the code:** Copy and paste the following snippet:
 
     ```html
     <div>
@@ -123,14 +126,13 @@ Test this quick example in less than 60 seconds:
         </style>
     </div>
     ```
-
-+ **Launch:** Right-click on the code or on the name of the file and select "Show Preview". That's it!
+4. **Launch:** Right-click on the code or the file name and select "Show Preview". That's it! You have a reactive component running natively.
 
 ### Now What? 🛠️
 
 + **Experiment:** Change the HTML code to whatever you want.
 
-+ **Program:** Change all the JS code to whatever you want. OctopusJS only adds utility functions. You can manipulate the DOM directly.
++ **Program:** Change all the JS code to whatever you want. OctopusJS provides lightweight utility functions, but it never blocks you. You retain full freedom to manipulate the DOM directly using Vanilla JS.
 
 + **Design:** Change the CSS styles to whatever you want.
 
@@ -155,7 +157,7 @@ Install the package using your favorite package manager:
 npm install octopus-js-native
 ```
 
-Then, you can import it in your JavaScript modules:
+Then, you can import it directly into your JavaScript modules:
 
 ```javascript
 import { octopus } from 'octopus-js-native'
@@ -163,28 +165,28 @@ import { octopus } from 'octopus-js-native'
 
 #### 2\. Via CDN (Quick start)
 
-For fast prototyping or small projects, you can include OctopusJS directly from a CDN like Unpkg or JSDelivr:
+For fast prototyping, static pages or zero-build projects, you can include OctopusJS directly from a CDN like Unpkg or JSDelivr:
 
 ```html
 <script type="module">
-    import { octopus } from 'https://unpkg.com/octopus-js-native/octopus.js'
+    import { octopus } from 'https://unpkg.com/octopus-js-native/dist/octopus.min.js'
 </script>
 ```
 
 #### 3\. Local Download
 
-If you prefer total control, simply download the `octopus.min.js` file from the `dist` folder in our [GitHub repository](https://github.com/mcandeira/octopusjs) and include it in your project.
+If you prefer total control, simply download the `octopus.min.js` file from the `dist` folder in our [GitHub repository](https://github.com/mcandeira/octopusjs) and include it locally in your project.
 
 
 [<h3 id="octopus-components">How To Use Octopus Components</h3>](#octopus-components)
 
-An Octopus Component is primarily defined by a block-level HTML element that acts as a wrapper for the component. Inside this wrapper you can place the structure, behavior and style of your component without worrying about anything outside the wrapper. Your Octopus Component always will work exactly as you designed it.
+An Octopus Component is primarily defined by a block-level HTML element that acts as a wrapper for the component. Inside this wrapper you can place the structure, behavior and style of your component without worrying about anything outside. Your Octopus Component always will work exactly as you designed it, regardless of where you place it.
 
-To learn how to use an Octopus Component, continue reading:
+To learn how to use an Octopus Component, follow these steps:
 
 + #### [<a id="wrapper">Create a wrapper for the Octopus Component:</a>](#wrapper)
 
-    First, you have to use a block-level HTML element (e.g. `<div>`) that serves as a wrapper for the Octopus Component. Then you can divide it conceptually into three sections: Structure, Behavior and Style.
+    First, you have to use a block-level HTML element (like a `<div>`, `<section>`, or `<article>`) that serves as a wrapper for the Octopus Component. Then you can divide it conceptually into three sections: Structure, Behavior and Style.
 
     ```html
     <div>
@@ -216,7 +218,7 @@ To learn how to use an Octopus Component, continue reading:
     </div>
     ```
 
-    Inside each `<template>` element you can define structural fragments that are not rendered initially but can be injected dynamically using JavaScript. In this case, we use the **8-branch octopus syntax** (inspired by Twig Syntax) to inject dynamic values ("{{ val }}") and handle logic ("8{if condition} ... 8{endif}" or "8{for item in list} ... 8{endfor}").
+    Inside each `<template>` element you can define structural fragments that are not rendered initially but can be injected dynamically using JavaScript. In this case, we use the **[8-branch octopus syntax](#syntax)** (inspired by Twig syntax) to inject dynamic values ("{{ val }}") and handle logic ("8{if condition}").
 
 + #### [<a id="behavior">Code the Behavior of the Octopus Component:</a>](#behavior)
 
@@ -254,29 +256,32 @@ To learn how to use an Octopus Component, continue reading:
 
         <script type="module" class="octopus">
             import { octopus } from 'octopus-js-native'
+            {
+                const component = octopus.getComponent(this)
+                const template = component.getChild('template')
 
-            const component = octopus.getComponent(this)
-            const template = component.getChild('template')
+                const data = {
+                    name: 'Abyssal Octopus',
+                    active: true,
+                }
 
-            const data = {
-                name: 'Abyssal Octopus',
-                active: true,
+                component.render([template, data])
             }
-
-            component.render([template, data])
         </script>
 
         <!-- Style -->
     </div>
     ```
 
-    (!) **The `class="octopus"` attribute:** This helps OctopusJS identify and resolve the component's scope instantly.
+    > 🐙 **The `class="octopus"` attribute** helps OctopusJS resolve the component's scope instantly.
 
-    (!) **The `this` keyword:** In a `<script type="module">` the `this` keyword returns `undefined` so you can omit it. However, using the `this` keyword gives more meaning to the operation.
+    > 💡 **The `this` keyword** in this context returns `undefined` so you can omit it. However, explicitly passing `this` gives more semantic meaning to the operation.
 
-    (!) **Pure JavaScript:** You are not limited to OctopusJS features; you can use any native Web API or third-party library inside the script.
+    > 📦 **The `{ }` scope guard** prevents some editors from incorrectly flagging duplicate variable names when using multiple Octopus components in the same file.
 
-    (!!) **Scope Protection:** Using `type="module"` is mandatory to ensure encapsulation and avoid global variable collisions.
+    > ⚡ **Pure JavaScript:** You are not limited to use OctopusJS features; you can use any native Web API or third-party library inside the script.
+
+    > 🛡️ **Scope Protection:** Using `type="module"` is mandatory to ensure encapsulation and use OctopusJS properly.
 
 + #### [<a id="style">Define the Style of the Octopus Component:</a>](#style)
 
@@ -294,16 +299,17 @@ To learn how to use an Octopus Component, continue reading:
 
         <script type="module" class="octopus">
             import { octopus } from 'octopus-js-native'
+            {
+                const component = octopus.getComponent(this)
+                const template = component.getChild('template')
 
-            const component = octopus.getComponent(this)
-            const template = component.getChild('template')
+                const data = {
+                    name: 'Abyssal Octopus',
+                    active: true,
+                }
 
-            const data = {
-                name: 'Abyssal Octopus',
-                active: true,
+                component.render([template, data])
             }
-
-            component.render([template, data])
         </script>
 
         <style>
@@ -318,9 +324,53 @@ To learn how to use an Octopus Component, continue reading:
     </div>
     ```
 
-    (!) **Best Practice:** Use appropriate CSS combinators (like `>`) to target elements precisely within your component's scope.
+    > 🎨 **Best Practice:** Use appropriate CSS combinators (like `>`) to target elements precisely within your component's scope.
 
 **And that's it\!** You now have a fully encapsulated, high-performance Octopus Component. You can drop it anywhere in your HTML, confident that its logic, structure, and styles will remain isolated and conflict-free. **It just works, perfectly.**
+
+
+[<h3 id="syntax">Octopus 8-Branch Syntax</h3>](#syntax)
+
+OctopusJS uses a proprietary, high-performance logic syntax inspired by Twig but optimized for client-side execution.
+
+1. #### Variables & Interpolation
+    
+    Use double curly braces to safely inject text data into your HTML. If you need to render active HTML code directly, use the raw keyword:
+
+    ```html
+    <template>
+        <span>Welcome, {{ user.name }}!</span>
+        {{raw loginAnchor}}
+    </template>
+    ```
+
+2. #### Conditionals (8{if})
+    
+    ```html
+    <template>
+        8{if isAdmin}
+            <button>Delete Records</button>
+        8{else}
+            <p>View only mode</p>
+        8{endif}
+    </template>
+    ```
+
+3. #### Loops (8{for})
+
+    ```html
+    <template>
+        <ul>
+            8{for product in catalog}
+                <li>{{ product.title }} - {{ product.price }}$</li>
+            8{endfor}
+        </ul>
+    </template>
+    ```
+
+4. #### Why the 8?
+
+    The 8 prefix is more than just a brand; it's a strategic technical choice. It ensures that the syntax never collides with server-side template engines (like Twig, Blade, or Jinja). You can write OctopusJS logic inside your backend views without escaping a single character.
 
 
 [<h3 id="nested">Nested Components</h3>](#nested)
@@ -406,15 +456,14 @@ Accessed via `octopus.getComponent()`, these methods provide granular control ov
 ### 2. Parent-Child Communication (Directed Flow)
 Built-in methods to bridge the gap between nested components:
 
-* **`setProp()` & `receiveProp()`**: Allows a parent to pass data down to its children (Top-down data flow).
-* **`setChildListener()` & `receiveChildListener()`**: Enables a child to emit data or signals up to its parent (Bottom-up event flow).
+* **`sendProp()` & `receiveProp()`**: Allows a parent to pass data down to its children (Top-down data flow).
+* **`sendParent()` & `receiveChild()`**: Enables a child to emit data or signals up to its parent (Bottom-up event flow).
 
 ### 3. The "Global Bridge" (Decoupled Communication)
 These functions allow any two components to talk to each other, even if they aren't related in the DOM tree:
 
-* **`setValue()` & `receiveValue()`**: A lightweight global state manager to share reactive values.
-* **`setProtected()` & `receiveProtected()`**: Reactive values protected by password.
-* **`setHelper()` & `receiveHelper()`**: Register and reuse utility functions across your entire application.
+* **`sendValue()` & `receiveValue()`**: A lightweight global state manager to share reactive values.
+* **`sendHelper()` & `receiveHelper()`**: Register and reuse utility functions across your entire application.
 * **`setAction()` & `triggerAction()`**: A powerful command pattern to trigger specific behaviors remotely.
 
 ### 4. Advanced Server Integration
@@ -464,7 +513,7 @@ Instead of a centralized "Engine" that manages the entire application state (and
 
 By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifting of encapsulation to the browser's C++ core instead of simulating it with expensive JavaScript workarounds.
 
-> **The Result:** A framework that doesn't fight the browser, but flows with it. That's how we achieve **~11ms (avg)** for rendering 1,000 items while others are still parsing their virtual trees.
+> **The Result:** A framework that doesn't fight the browser, but flows with it. That's how we achieve **~12ms (avg)** for logic execution and near-vanilla speeds () for full DOM paint of 1,000 complet items while others are still parsing their virtual trees.
 
 [Table of Contents](#table)
 
@@ -480,27 +529,30 @@ By using `@scope` for CSS and `type="module"` for JS, we offload the heavy lifti
 
 [<h2 id="benchmarks">Benchmarks & Comparison</h2>](#benchmarks)
 
-[OctopusJS benchmark](https://github.com/mcandeira/octopusjs/blob/main/assets/benchmarks/benchmark_octopus.html) was tested against [Vanilla JS standard benchmark](https://github.com/mcandeira/octopusjs/blob/main/assets/benchmarks/benchmark_vanilla.html). The following results show the time (in milliseconds) required to render and mount **1,000 complex items** into the DOM.
+The [OctopusJS benchmark](https://github.com/mcandeira/octopusjs/blob/main/assets/benchmarks/benchmark_octopus.html) was tested against the [Vanilla JS standard benchmark](https://github.com/mcandeira/octopusjs/blob/main/assets/benchmarks/benchmark_vanilla.html). The following results show the time (in milliseconds) required to render and mount **1,000 complex items** into the DOM.
 
-| Framework       | Render Time (1k items) | Size (Gzipped) | DOM Strategy         |
-|-----------------|------------------------|----------------|----------------------|
-| **OctopusJS** | **~54.4ms (avg)** | **5.3kB** | **Atomic Injection** |
-| Vanilla JS      | ~50.12ms (avg)                  | 0kB            | Manual Manipulation  |
-| React 18        | ~145ms                 | ~42kB          | Virtual DOM          |
-| Vue 3           | ~110ms                 | ~33kB          | Virtual DOM / Proxy  |
+| Framework          | Render Time (1k items) | Relative Speed | Size (Gzipped) |
+|--------------------|------------------------|----------------|----------------------|
+| 🧊 Vanilla JS      | ~53.3ms (avg)          | 1.00x          | 0kB            |
+| 🐙 **OctopusJS**   | **~54.8ms (avg)**      | 1.03x          | **6.4kB** |
+| ⚡ Svelte / Solid   | ~59.0ms (avg)          | 1.10x          | ~7kB            |
+| 💚 Vue 3           | ~64.0ms (avg)          | 1.20x          | ~33kB            |
+| ⚛️ React 18        | ~75ms                  | 1.40x          | ~42kB          |
+| 🅰️ Angular         | ~80.0ms                | 1.50x          | ~65kB          |
+
+> Note: Vanilla JS and OctopusJS times are exact hardware measurements. Times for Svelte, Vue, React, and Angular are extrapolated based on their official js-framework-benchmark relative multipliers applied to the same Vanilla JS baseline. OctopusJS achieves near-vanilla speeds by eliminating the Virtual DOM overhead entirely.
 
 [Table of Contents](#table)
 
 
 [<h2 id="contact">Contact & Community</h2>](#contact)
 
-OctopusJS is a project born from the passion for a better, faster web. If you want to contribute, report a bug, or simply share your experience, feel free to reach out:
+OctopusJS is a project born from the passion for a better faster web development experience. If you want to contribute, report a bug, or simply share your experience, feel free to reach out:
 
-<!-- + **Website:** [octopusjs.com](https://octopusjs.com) -->
 + **GitHub:** [Report an Issue](https://github.com/mcandeira/octopusjs/issues)
 + **Email:** mcandeira.code@gmail.com
 
-**Let's build a faster web together. 🐙**
+**Let's build a better web together. 🐙**
 
 [Table of Contents](#table)
 
@@ -508,6 +560,6 @@ OctopusJS is a project born from the passion for a better, faster web. If you wa
 [<h2 id="footer">License & Acknowledgments</h2>](#footer)
 
 + **License:** Distributed under the **MIT License**. See `LICENSE` for more information.
-+ **Collaborative Engineering:** A special thanks to **Gemini (Google AI)** for its insightful role as a "Silicon Partner" in the documentation, release an improvement of this project.
++ **Collaborative Engineering:** A special thanks to **Gemini (Google AI)** for its insightful role as a "Silicon Partner" in the documentation, release and improvement of this project.
 
 [Table of Contents](#table)

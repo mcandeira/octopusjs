@@ -1,17 +1,22 @@
-import * as Marks from '../marks'
+import { OctopusMark } from "../marks/OctopusMark.ts"
+import { OctopusMarkInvalid } from "../marks/OctopusMarkInvalid.ts"
+import { OctopusMarkIf } from "../marks/OctopusMarkFamilyIF.ts"
+import { OctopusMarkElseIf } from "../marks/OctopusMarkFamilyIF.ts"
+import { OctopusMarkElse } from "../marks/OctopusMarkFamilyIF.ts"
+import { OctopusMarkEndIf } from "../marks/OctopusMarkFamilyIF.ts"
+import { OctopusMarkFor } from "../marks/OctopusMarkFamilyFOR.ts"
+import { OctopusMarkEndFor } from "../marks/OctopusMarkFamilyFOR.ts"
 
 export class OctopusMarksFactory {
 
     private static readonly REGEX_SPACES: RegExp = /\s+/
 
-    static createMark(start: number, end: number, content: string): Marks.OctopusMark
+    static createMark(start: number, end: number, header: string): OctopusMark
     {
-        if(end < start) return new Marks.OctopusMarkInvalid(start, end)
-
-        const cleanContent = content.trim()
-        if(!cleanContent) return new Marks.OctopusMarkInvalid(start, end)
+        const cleanHeader = header.trim()
+        if(!cleanHeader) return new OctopusMarkInvalid(start, end, header)
         
-        const [first, ...rest] = cleanContent.split(this.REGEX_SPACES)
+        const [first, ...rest] = cleanHeader.split(this.REGEX_SPACES)
         switch(first){
             case 'if':
             case 'elseif':
@@ -22,38 +27,38 @@ export class OctopusMarksFactory {
             case 'endfor':
                 return this.createMarkFor(start, end, first, rest)
             default:
-                return new Marks.OctopusMarkInvalid(start, end)
+                return new OctopusMarkInvalid(start, end, header)
         }
     }
 
-    private static createMarkIf(start: number, end: number, name: string, headers: string[]): Marks.OctopusMark
+    private static createMarkIf(start: number, end: number, name: string, headers: string[]): OctopusMark
     {
         switch(name){
             case 'if':
-                if(headers.length < 1) return new Marks.OctopusMarkInvalid(start, end)
-                return new Marks.OctopusMarkIf(start, end, name, headers[0])
+                return headers.length > 0 ? new OctopusMarkIf(start, end, name, headers.join(' ')) :
+                                            new OctopusMarkInvalid(start, end, `${name} ${headers.join(' ')}`)
             case 'elseif':
-                if(headers.length < 1) return new Marks.OctopusMarkInvalid(start, end)
-                return new Marks.OctopusMarkElseIf(start, end, name, headers[0])
+                return headers.length > 0 ? new OctopusMarkElseIf(start, end, name, headers.join(' ')) :
+                                            new OctopusMarkInvalid(start, end, `${name} ${headers.join(' ')}`)
             case 'else':
-                return new Marks.OctopusMarkElse(start, end, name)
+                return new OctopusMarkElse(start, end, name)
             case 'endif':
-                return new Marks.OctopusMarkEndIf(start, end, name)
+                return new OctopusMarkEndIf(start, end, name)
             default:
-                return new Marks.OctopusMarkInvalid(start, end)
+                return new OctopusMarkInvalid(start, end, `${name} ${headers.join(' ')}`)
         }
     }
 
-    private static createMarkFor(start: number, end: number, name: string, headers: string[]): Marks.OctopusMark
+    private static createMarkFor(start: number, end: number, name: string, headers: string[]): OctopusMark
     {
         switch(name){
             case 'for':
-                if(headers.length < 3) return new Marks.OctopusMarkInvalid(start, end)
-                return new Marks.OctopusMarkFor(start, end, name, headers[0], headers[2])
+                return headers.length > 2 ? new OctopusMarkFor(start, end, name, headers.join(' ')) :
+                                            new OctopusMarkInvalid(start, end, `${name} ${headers.join(' ')}`)
             case 'endfor':
-                return new Marks.OctopusMarkEndFor(start, end, name)
+                return new OctopusMarkEndFor(start, end, name)
             default:
-                return new Marks.OctopusMarkInvalid(start, end)
+                return new OctopusMarkInvalid(start, end, `${name} ${headers.join(' ')}`)
         }
     }
 

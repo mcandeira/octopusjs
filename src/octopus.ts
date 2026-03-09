@@ -1,8 +1,8 @@
-import { OctopusComponent } from './periferics/OctopusComponent'
-import { OctopusNervousSystem } from './periferics/OctopusNervousSystem'
-import { OctopusMind } from './control/OctopusMind'
+import { OctopusComponent } from './periferics/OctopusComponent.ts'
+import { OctopusNervousSystem } from './periferics/nervous/OctopusNervousSystem.ts'
+import { OctopusMind } from './control/OctopusMind.ts'
 
-import type { Selector } from './periferics/OctopusUtils'
+import type { Selector } from './periferics/OctopusUtils.ts'
 
 export class octopus {
 
@@ -11,10 +11,10 @@ export class octopus {
     /**
      * Factory method to instantiate an OctopusComponent object.
      * @static
-     * @param {Selector} [selector] - CSS Selector, DOM Element or undefined (for self-discovery of the OctopusComponent).
+     * @param {Selector} [selector=undefined] - CSS Selector, DOM Element or undefined (for self-discovery of the OctopusComponent).
      * @returns {OctopusComponent} A new OctopusComponent instance.
      */
-    static getComponent(selector?: Selector): OctopusComponent
+    static getComponent(selector: Selector = undefined): OctopusComponent
     {
         return new OctopusComponent(selector)
     }
@@ -24,60 +24,35 @@ export class octopus {
    ===================================================================== */
 
     /**
-     * Sets a value in the Octopus Central Nervous System.
+     * Sends a value to the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The unique name for the value.
-     * @param {any} value - The data payload to set.
-     * @param {boolean} [override=false] - If true, overwrites an existing value with the same name.
+     * @param {string} name - The name of the value.
+     * @param {any} [value=undefined] - The optional data payload to send.
+     * @param {string|undefined} [password=undefined] - Prevents write access to the value by password.
+     * @param {boolean} [accessible=true] - If true, allows public read access. If false, prevents public read access by password.
      * @returns {void}
-     */ 
-    static setValue(name: string, value: any, override: boolean = false): void
+     */
+    static sendValue(name: string, value: any = undefined, password: string|undefined = undefined, accessible: boolean = true): void
     {
-        OctopusNervousSystem.setValue(name, value, override)
+        OctopusNervousSystem.sendValue(name, value, password, accessible)
     }
 
     /**
-     * Receive the value setted in the Octopus Central Nervous System.
+     * Receives the value sent to the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The name of the setted value.
-     * @param {Function} callback - The function to execute when the value is available.
-     * @param {boolean} [remember=true] - If true, the value will be received whenever it changes.
+     * @param {string} name - The name of the sent value.
+     * @param {Function} callback - The function to execute.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if the value was not yet sent (undefined).
+     * - If false: The execution always waits to the next sent value.
+     * - If undefined: Executes as soon as the value is available.
+     * @param {boolean} [once=false] - If true, the receiver will execute only once. If false, the receiver will execute whenever the value changes.
+     * @param {string|undefined} [password=undefined] - Allows receiving private values protected by password.
      * @returns {void}
      */
-    static receiveValue(name: string, callback: Function, remember: boolean = true): void
+    static receiveValue(name: string, callback: Function, immediate: boolean|undefined = undefined, once: boolean = false, password: string|undefined = undefined): void
     {
-        OctopusNervousSystem.receiveValue(name, callback, remember)
-    }
-
-/* =====================================================================
-    OCTOPUS PROTECTED VALUES
-   ===================================================================== */
-
-    /**
-     * Sets a value protected by password in the Octopus Central Nervous System.
-     * @static
-     * @param {string} name - The unique name for the protected value.
-     * @param {any} value - The protected data payload to set.
-     * @param {string} password - The password required to access the value.
-     * @returns {void}
-     */
-    static setProtected(name: string, value: any, password: string): void
-    {
-        OctopusNervousSystem.setProtected(name, value, password)
-    }
-
-    /**
-     * Receive the protected value setted in the Octopus Central Nervous System.
-     * @static
-     * @param {string} name - The name of the protected value.
-     * @param {string} password - The password required to access the value.
-     * @param {Function} callback - The function to execute when the protected value is available.
-     * @param {boolean} [remember=true] - If true, the protected value will be received whenever it changes.
-     * @returns {void}
-     */
-    static receiveProtected(name: string, password: string, callback: Function, remember: boolean = true): void
-    {
-        OctopusNervousSystem.receiveProtected(name, password, callback, remember)
+        OctopusNervousSystem.receiveValue(name, callback, immediate, once, password)
     }
 
 /* =====================================================================
@@ -85,29 +60,35 @@ export class octopus {
    ===================================================================== */
 
     /**
-     * Sets a helper function in the Octopus Central Nervous System.
+     * Sends a helper function to the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The unique name for the setted helper.
-     * @param {Function} callback - The helper function to set.
-     * @param {boolean} [override=false] - If true, overwrites an existing helper with the same name.
+     * @param {string} name - The name of the helper.
+     * @param {Function} helper - The helper function to send.
+     * @param {string|undefined} [password=undefined] - Prevents write access to the helper by password.
+     * @param {boolean} [accessible=true] - If true, allows public read access. If false, prevents public read access by password.
      * @returns {void}
      */
-    static setHelper(name: string, callback: Function, override: boolean = false): void
+    static sendHelper(name: string, helper: Function, password: string|undefined = undefined, accessible: boolean = true): void
     {
-        OctopusNervousSystem.setHelper(name, callback, override)
+        OctopusNervousSystem.sendHelper(name, helper, password, accessible)
     }
 
     /**
-     * Receive the helper function setted in the Octopus Central Nervous System.
+     * Receives the helper function sent to the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The name of the setted helper.
-     * @param {Function} callback - The function to execute when the helper is available.
-     * @param {boolean} [remember=false] - If true, the helper will be received whenever it changes.
+     * @param {string} name - The name of the sent helper.
+     * @param {Function} callback - The function to execute.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if the helper was not yet sent (undefined).
+     * - If false: The execution always waits to the next sent helper.
+     * - If undefined: Executes as soon as the helper is available.
+     * @param {boolean} [once=true] - If true, the receiver will execute only once. If false, the receiver will execute whenever the helper changes.
+     * @param {string|undefined} [password=undefined] - Allows receiving private values protected by password.
      * @returns {void}
      */
-    static receiveHelper(name: string, callback: Function, remember: boolean = false): void
+    static receiveHelper(name: string, callback: Function, immediate: boolean|undefined = undefined, once: boolean = true, password: string|undefined = undefined): void
     {
-        OctopusNervousSystem.receiveHelper(name, callback, remember)
+        OctopusNervousSystem.receiveHelper(name, callback, immediate, once, password)
     }
 
 /* =====================================================================
@@ -115,29 +96,35 @@ export class octopus {
    ===================================================================== */
 
     /**
-     * Sets a action function in the Octopus Central Nervous System.
+     * Sets an action in the Octopus Central Nervous System.
      * @static
-     * @param {string} name - The unique name for the action.
+     * @param {string} name - The name of the action to set.
      * @param {Function} action - The action function to set.
-     * @param {boolean} [override=false] - If true, overwrites an existing action with the same name.
+     * @param {boolean|undefined} [immediate=undefined] 
+     * - If true: Forces immediate execution even if a trigger was not yet sent (undefined).
+     * - If false: The execution always waits to the next trigger.
+     * - If undefined: Executes as soon as a trigger is available.
+     * @param {boolean} [once=false] - If true, the action will execute only once. If false, the action will execute whenever it is triggered.
+     * @param {string|undefined} [password=undefined] - Allows reacting to private triggers protected by password.
      * @returns {void}
      */
-    static setAction(name: string, action: Function, override: boolean = false): void
+    static setAction(name: string, action: Function, immediate: boolean|undefined = undefined, once: boolean = false, password: string|undefined = undefined): void
     {
-        OctopusNervousSystem.setAction(name, action, override)
+        OctopusNervousSystem.setAction(name, action, immediate, once, password)
     }
 
     /**
-     * Triggers a action setted in the Octopus Central Nervous System.
+     * Triggers an action set in the Octopus Central Nervous System.
      * @static
      * @param {string} name - The name of the action to trigger.
-     * @param {any} [value=undefined] - The optional payload to pass to the action.
-     * @param {boolean} [remember=false] - If true, the action will trigger whenever it changes.
+     * @param {any} [value=undefined] - The optional data payload to pass to the action.
+     * @param {string|undefined} [password=undefined] - Prevents write access to the value by password.
+     * @param {boolean} [accessible=true] - If true, allows public read access. If false, prevents public read access by password.
      * @returns {void}
      */
-    static triggerAction(name: string, value: any = undefined, remember: boolean = false): void
+    static triggerAction(name: string, value: any = undefined, password: string|undefined = undefined, accessible: boolean = true): void
     {
-        OctopusNervousSystem.triggerAction(name, value, remember)
+        OctopusNervousSystem.triggerAction(name, value, password, accessible)
     }
 
 /* =====================================================================

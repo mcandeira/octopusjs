@@ -1,15 +1,20 @@
-import * as Mark from '../marks'
-import * as Tree from '../trees'
+import { OctopusMark } from '../marks/OctopusMark.ts'
+import { OctopusMarkIf } from '../marks/OctopusMarkFamilyIF.ts'
+import { OctopusMarkFor } from '../marks/OctopusMarkFamilyFOR.ts'
+import { OctopusTree } from '../trees/OctopusTree.ts'
+import { OctopusTreeIf } from '../trees/OctopusTreeIf.ts'
+import { OctopusTreeFor } from '../trees/OctopusTreeFor.ts'
+import { OctopusTreeInvalid } from '../trees/OctopusTreeInvalid.ts'
 
 export class OctopusTreesFactory {
 
-    static createTree(root: Mark.OctopusMark): Tree.OctopusTree
+    static createTree(root: OctopusMark): OctopusTree
     {
-        if(root instanceof Mark.OctopusMarkIf) return new Tree.OctopusTreeIf(root)
+        if(root instanceof OctopusMarkIf) return new OctopusTreeIf(root)
 
-        if(root instanceof Mark.OctopusMarkFor) return new Tree.OctopusTreeFor(root)
+        if(root instanceof OctopusMarkFor) return new OctopusTreeFor(root)
             
-        return new Tree.OctopusTreeInvalid(root)
+        return new OctopusTreeInvalid(root)
     }
 
 }

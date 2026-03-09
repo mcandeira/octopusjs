@@ -68,7 +68,7 @@ export class OctopusCache {
     private stringToHash(string: string): number
     {
         const length = string.length
-
+        
         let hash = 5381
 
         for(let i = 0; i < length; i++){

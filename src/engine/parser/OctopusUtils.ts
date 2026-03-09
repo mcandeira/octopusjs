@@ -11,19 +11,18 @@ export const OctopusUtils = {
 
         REGEX_VARS: /\{\{([^}]+)\}\}/g,
    
-        unknownMark: (mark: string): string => OctopusUtils.error(`Mark "${mark} unknown."`)
-        //incompleteTag: '[Octopus Parser Error] Incomplete tag in: ',
-        //unclosedTag: '[Octopus Parser Error] Unclosed tag in: ',
-        //unopenedTag: '[Octopus Parser Error] Unopened tag in: ',
-        //undefinedTree: '[Octopus Parser Error] Unknown tree in: ',
-        //lastUnclosedTree: (tree: string): string => OctopusUtils.error(`Last "${tree}" tree unclosed.`),
+        lastUnclosedMark: (): string => OctopusUtils.error(`Last tag unclosed.`),
+        invalidMark: (mark: string): string => OctopusUtils.error(`Tag "${mark}" invalid.`),
+        unopenedMark: (mark: string): string => OctopusUtils.error(`Tag "${mark}" unopened.`),
+        invalidTree: (tree: string): string => OctopusUtils.error(`Tag "${tree}" invalid.`),
+        unclosedTree: (tree: string): string => OctopusUtils.error(`Tag "${tree}" unclosed.`),
     },
 
     function:
     {
         resolveValue(path: string, source: Record<string, any>): any
         {
-            if (!path) return false;
+            if (!path) return undefined;
             let current = source;
             let start = 0;
             
@@ -38,11 +37,43 @@ export const OctopusUtils = {
             return current;
         },
 
+        evaluateCondition(condition: string, data: Record<string, any>): boolean 
+        {
+            if(!condition) return false
+
+            try
+            {
+                const evaluator = new Function(...Object.keys(data), `return ${condition}`)
+
+                return !!evaluator(...Object.values(data))
+            }
+            catch(error){console.warn(OctopusUtils.error(`Syntax error evaluating condition: "${condition}"`), error)}
+
+            return false
+        },
+
+        interpolate(text: string, data: Record<string, any>): string 
+        {
+            return text.replace(OctopusUtils.constant.REGEX_VARS, (_, key) => {
+                const cleanKey = key.trim();
+                
+                const isRaw = cleanKey.startsWith('raw ');
+                
+                const actualKey = isRaw ? cleanKey.slice(4).trim() : cleanKey
+                
+                const value = OctopusUtils.function.resolveValue(actualKey, data)
+                
+                if(value === undefined || value === null) return ''
+                
+                return isRaw ? String(value) : OctopusUtils.function.escapeHTML(String(value));
+            })
+        },
+
         escapeHTML(str: string): string
         {
             if (typeof str !== 'string') return str
             return str.replace(/[&<>"']/g, m => (m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : m === '"' ? '&quot;' : '&#39;'))
-        }
+        },
     }
 
 } as const
